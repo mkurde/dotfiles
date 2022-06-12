@@ -1,0 +1,318 @@
+#!/usr/bin/env bash
+
+# Easier navigation: .., ..., ...., ..... and -
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias -- -="cd -"
+
+alias g="git"
+alias h="history"
+# deactivated in favour of "autojump"
+#alias j="jobs"
+alias V="vagrant"
+alias VV="vagrant global-status"
+
+# Terraform
+alias tf="terraform"
+alias tffr="terraform fmt -recursive -diff"
+alias tfpl="tf providers lock \
+  -platform=linux_amd64 \
+  -platform=darwin_amd64 \
+  -platform=darwin_arm64 \
+  -platform=windows_amd64"
+
+# Just
+new_justfile() {
+	if [[ -f justfile ]]; then
+		echo "Error: justfile already exists"
+		return 1
+	fi
+	curl -sL "https://raw.githubusercontent.com/dsiebel/just-bootstrap/main/Justfile" > justfile
+}
+
+# Make
+make_bootstrap() {
+	if [[ -f Makefile || -f .bootstrap.mk ]]; then
+		echo "Error: make-bootstrap seems to be installed already."
+		return 1
+	fi
+	curl -LO "https://raw.githubusercontent.com/dsiebel/make-bootstrap/master/.bootstrap.mk"
+	curl -LO "https://raw.githubusercontent.com/dsiebel/make-bootstrap/master/Makefile"
+}
+
+# Process chooser for caffeinate, to prevent mac from sleeping
+alias caf='ps | fzf | cut -w -f 1 | xargs caffeinate -dimw'
+
+# Process based top (like Activity Monitor)
+alias ptop='top -stats pid,command,cpu,idlew,power -o power -d'
+
+# Git
+alias gbav='git branch -av'
+alias gbll="git for-each-ref --format='%(refname)' 'refs/heads/**'"
+alias gbls="git branch --list --format='%(refname:short)'"
+alias gds='git diff --staged'
+alias glf="git log --oneline | fzf --height 100% --multi --preview 'git show {+1}'"
+
+## git branches via fzf
+alias gw='git branch | fzf | xargs git switch'
+alias gwr="git branch --remotes | fzf | xargs git switch"
+
+## git worktree
+#alias gwinit='__git_worktree_init'
+#alias gw='cd "$(git worktree list | cut -f1 -d" " | grep -v ".bare" | fzf || echo ".")"'
+#alias gwa='git worktree add'
+#alias gwaf='git worktree add -f'
+#alias gwab='git worktree add -b'
+#alias gwls='git worktree list'
+#alias gwl='git worktree lock'
+#alias gwmv='git worktree move'
+#alias gwp='git worktree prune'
+#alias gwrm='git worktree remove'
+#alias gwul='git worktree unlock'
+
+__git_worktree_init() {
+	local repo="${1?Argument 1 (repository) is required}"
+	local dir="${2:-$(basename "${repo%.git}")}"
+
+	if [[ ! -d "${dir}" ]]; then
+		echo "Creating directory ${dir}"
+		mkdir -p "${dir}"
+	fi
+
+	cd "${dir}"  || :
+
+	if [[ -f "${dir}/.git" || -d "${dir}/.git" ]]; then
+		echo "ERROR: .git file/directory already exists."
+		return
+	fi
+
+	git clone --bare "${repo}" .bare
+	echo "gitdir: ./.bare" > .git
+	if [[ -n "$2" ]]; then
+		git worktree add "$2"
+	fi
+}
+
+# Docker
+alias D="docker"
+alias DR="docker run --rm -it"
+alias DC="docker-compose"
+alias DM="docker-machine"
+
+alias deti="docker exec -ti"
+alias drti="docker run --rm -ti"
+alias dps="docker ps"
+alias dpsa="docker ps -a"
+
+## Damn typo!
+alias docker-composer='docker-compose'
+
+## Delete all stopped containers and untagged images
+alias docker-cleanup-stopped='docker rm $(docker ps -aq -f status=exited)'
+alias docker-cleanup-untagged='docker rmi $(docker images -q --filter dangling=true)'
+alias docker-cleanup="docker-cleanup-stopped; docker-cleanup-untagged"
+alias docker-stop-all='docker stop $(docker ps -a -q)'
+alias docker-clean='docker system prune -af --volumes ; \
+  docker container prune -f ; \
+  docker network prune -f ; \
+  docker volume prune -f'
+
+## Remove all containers, images and networks created by docker-compose up
+alias docker-compose-cleanup="_docker_compose_cleanup"
+
+_docker_compose_cleanup() {
+	docker-compose -f "${1:-docker-compose.yml}" down --rmi all
+}
+
+# Google Cloud SDK
+gcloudcfg() {
+	if (( $# == 0 )); then
+		gcloud config configurations list
+	elif (( $# == 1 )); then
+		gcloud config configurations activate "$@"
+	else
+		gcloud config configurations "$@"
+	fi
+}
+alias G="gcloud"
+alias GX="gcloudcfg"
+
+# Kubernetes and tools
+alias K="kubectl"
+alias KX="kubectx"
+alias KNS="kubens"
+alias I="istioctl"
+alias MK="minikube"
+
+#alias kx="kubie ctx"
+#alias kns="kubie ns"
+alias kn='kubens'
+alias kx='kubectx'
+
+alias kgpall="kubectl get pods --all-namespaces"
+alias kgpwall="kubectl get pods --all-namespaces -w"
+alias kdebug="kubectl run test-\$(whoami)-\$(date +%Y%m%d%H%M%S) --rm --restart=Never -it --image=fleshgrinder/debian:stretch-debug -- bash"
+
+alias kg="kubectl get"
+alias kd="kubectl describe"
+alias kdel="kubectl delete"
+alias ke="kubectl edit"
+alias ka="kubectl apply"
+
+alias kcl="kubectl config get-contexts"
+alias kcv="kubectl config view"
+alias kcx="kubectl config current-context"
+alias kcux="kubectl config use-context"
+
+alias kdf="kubectl diff -f"
+
+alias kgimg="kubectl get pods -o jsonpath='{..image}' | tr -s '[[:space:]]' \"\\n\" | sort -u"
+alias kgnr="kubectl get nodes | grep -v 'NAME' | awk '{print $1}' | xargs -I% sh -c 'echo   % ; kubectl describe node % | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo ''"
+alias kgns="kg nodes --sort-by=.metadata.creationTimestamp"
+
+alias krs="kubectl rollout status"
+
+alias kp="kubectl patch"
+alias kpd="kubectl patch deployment"
+alias kpdd="__kubectl_patch_date deployment"
+alias kpdw="__kubectl_patch_date_watch"
+alias kpdwd="__kubectl_patch_date_watch deployment"
+
+alias kkillc="__kubectl_kill_container"
+
+alias kdaf="__kubectl_diff_apply"
+
+__kubectl_kill_container() {
+	kubectl exec -i "$1" -c "$2" -- kill -15 1
+}
+
+__kubectl_patch_date() {
+	kubectl patch "$1" "$2" -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"$(date -u +"%s")\"}}}}}"
+}
+
+__kubectl_patch_date_watch() {
+	kubectl patch "$1" "$2" -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"$(date -u +"%s")\"}}}}}"
+	kubectl rollout status "$1" "$2"
+}
+
+__kubectl_diff_apply() {
+	local target="${1?Argument 1 (directory/file) is required}"
+	shift
+	local args=("$@")
+
+	if [[ -d "${target}" ]]; then
+		args+=("--recursive")
+	fi
+
+	kubectl diff "${args[@]}" --filename "${target}"
+	local has_diff="$?"
+
+	if (( has_diff == 0 )); then
+		echo "No changes"
+		return 0
+	elif (( has_diff > 1)); then
+		return "${has_diff}"
+	fi
+
+	echo
+
+	while true; do
+		# Ask the question (not using "read -p" as it uses stderr not stdout)
+		echo -n "Proceed? [y/n]: "
+		# Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
+		read -r yn </dev/tty
+		case $yn in
+			Y*|y*)
+			kubectl apply "${args[@]}" --filename "${target}"
+			return 0
+			#return $(kubectl apply "${args[@]}" --filename "${target}")
+			;;
+			N*|n*)
+			echo "Aborted."
+			return 1
+			;;
+		esac
+	done
+}
+
+# Get week number
+alias week='date +%V'
+
+# Stopwatch
+alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+
+# BackupBackup via rsync
+# I can't seem to remember the options
+alias backup='rsync -vahWEP --stats'
+
+# IP addresses
+alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="sudo ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'"
+alias ips="sudo ifconfig -a | grep -o 'inet6\\? \\(addr:\\)\\?\\s\\?\\(\\(\\([0-9]\\+\\.\\)\\{3\\}[0-9]\\+\\)\\|[a-fA-F0-9:]\\+\\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+# Show active network interfaces
+alias ifactive="ifconfig | pcregrep -M -o '^[^\\t:]+:([^\\n]|\\n\\t)*status: active'"
+
+# Flush Directory Service cache
+alias dsflush="dscacheutil -flushcache && killall -HUP mDNSResponder"
+
+# Edit hosts file and flush Directory Service cache afterwards
+alias hosts='sudo vim /etc/hosts; dsflush'
+
+# View HTTP traffic
+alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
+alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\\: .*|GET \\/.*\""
+
+# Empty the Trash on all mounted volumes and the main HDD.
+# Also, clear Apple’s System Logs to improve shell startup speed.
+# Finally, clear download history from quarantine. https://mths.be/bum
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
+
+# Show/hide hidden files in Finder
+alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
+alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+
+# URL-encode strings
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+
+# Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
+# (useful when executing time-consuming commands)
+alias badge="tput bel"
+
+# One of @janmoesen’s ProTip™s
+for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
+	# shellcheck disable=SC2139,SC2140
+	alias "$method"="lwp-request -m \"$method\""
+done
+
+# Kill all the tabs in Chrome to free up memory
+# [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
+alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
+
+# Lock the screen (when going AFK)
+alias afk="/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+
+# copy file interactive
+alias cp='cp -i'
+
+# move file interactive
+alias mv='mv -i'
+
+# untar
+alias untar='tar -xvf'
+
+# Reload the shell (i.e. invoke as a login shell)
+# shellcheck disable=SC2139
+alias reload="exec $SHELL -l"
+
+# Print each PATH entry on a separate line
+alias path='echo -e ${PATH//:/\\n}'
+
+# Misc
+alias mykey='pbcopy < ~/.ssh/id_rsa.pub'

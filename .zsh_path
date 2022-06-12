@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+export GOPATH="${HOME}/workspace"
+export MAKE_PATH="${HOMEBREW_PREFIX}/opt/make/libexec/gnubin"
+export KREW_ROOT="${HOME}/.krew"
+export KREW_PATH="${KREW_ROOT}/bin"
+export GCLOUD_PATH="${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/"
+export PATH="${HOME}/bin:${HOME}/.bin:${MAKE_PATH}:${GCLOUD_PATH}:$PATH:$GOPATH/bin:${KREW_PATH}"
+
+
+# Path overwrites added in front of the PATH
+
+# Java Jenv switcher
+#export PATH="$HOME/.jenv/bin:$PATH"
+#eval "$(jenv init -)"
+
+
+# Path appended at the end
+
+# kubernetes dummy image "k8s-dummy"
+#export PATH="$PATH:/Users/mkurde/workspace/src/github.com/trivago/kubernetes-dummy-image"

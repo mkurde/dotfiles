@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+alias denv='docker_env'
+docker_env() {
+	if [[ "$1" == minikube ]]; then
+		shift
+		docker_env_minikube "$@"
+	elif [[ "$1" == mac ]]; then
+		shift
+		docker_env_mac "$@"
+	elif [[ "$1" == docker-machine ]]; then
+		shift
+		docker_env_docker_machine "$@"
+	else
+		if [[ -v DOCKER_ENV ]]; then
+			echo "${DOCKER_ENV}"
+		else
+			env | grep -e "^DOCKER_" --color=never
+		fi
+	fi
+}
+
+docker_env_minikube() {
+	args=()
+
+	if [[ -n "$1" ]]; then
+		args+=("--profile=$1")
+	fi
+
+	if command -v minikube; then
+		eval "$(minikube "${args[@]}" docker-env)"
+		export DOCKER_ENV=minikube
+	fi
+}
+
+docker_env_docker_machine() {
+	machine_name=
+
+	if [[ -n "$1" ]]; then
+		machine_name="$1"
+	fi
+
+	if command -v docker-machine; then
+		eval "$(docker-machine env "${machine_name}")"
+		export DOCKER_ENV=docker-machine
+	fi
+}
+
+docker_env_mac() {
+	readonly denv=${DOCKER_ENV:-}
+	if [[ ${denv} == "minikube" ]]; then
+		eval "$(minikube docker-env -u)"
+	elif [[ ${denv} == "docker-machine" ]]; then
+		eval "$(docker-machine env -u)"
+	else
+		unset DOCKER_TLS_VERIFY
+		unset DOCKER_HOST
+		unset DOCKER_CERT_PATH
+		unset DOCKER_MACHINE_NAME
+	fi
+	unset DOCKER_ENV
+}
+
+dgcloud(){
+	docker run --rm --tty --interactive \
+		--volume "${HOME}/.gcloud:/root/.config/gcloud" \
+		--entrypoint gcloud \
+		"google/cloud-sdk" "$@"
+}
+
+docker_machine_nfs_volumes() {
+	readonly machine="${1:-default}"
+	docker-machine-nfs "${machine}" \
+	--shared-folder="${HOME}/" \
+	--mount-opts="noacl,async,noatime" \
+	--nfs-config="-alldirs -mapall=$(id -u):$(id -g)" \
+	--force
+}
