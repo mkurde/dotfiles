@@ -15,7 +15,7 @@ curl -L https://iterm2.com/shell_integration/install_shell_integration.sh \
  -o ~/.iterm2_shell_integration.zsh
 
 # setup fzf
-/usr/local/opt/fzf/install --no-bash --no-fish \
+$(brew --prefix)/opt/fzf/install --no-bash --no-fish \
  --key-bindings --no-completion --update-rc
 
 # setup kubectl and krew
