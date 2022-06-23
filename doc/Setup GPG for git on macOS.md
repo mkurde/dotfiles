@@ -36,6 +36,12 @@ ssb   4096R/42B317FD4BA89E7A 2016-03-10
 gpg --armor --export 3AA5C34371567BD2 | pbcopy
 ```
 
+Testing the default key:
+
+```sh
+echo "test" | gpg --clearsign
+```
+
 ## Modify .gitconfig to sign git commits
 
 To set your GPG signing key in Git, paste the text below, substituting in the
@@ -68,3 +74,7 @@ gpg --import my-private-key.asc
 - <https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key>
 - <https://medium.com/@jma/setup-gpg-for-git-on-macos-4ad69e8d3733>
 - <https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits>
+
+## Troubleshooting
+
+https://stackoverflow.com/questions/39494631/gpg-failed-to-sign-the-data-fatal-failed-to-write-commit-object-git-2-10-0
