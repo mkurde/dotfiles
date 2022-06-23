@@ -1,4 +1,4 @@
-eval "$(/usr/local/bin/brew shellenv)"
+#eval "$(/usr/local/bin/brew shellenv)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 # export HOMEBREW_PREFIX="/opt/homebrew";
 # export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
@@ -61,11 +61,7 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 #Gcloud python fix
 # https://stackoverflow.com/questions/64010263/attributeerror-module-importlib-has-no-attribute-util
 # https://stackoverflow.com/questions/64246832/xcode-update-broke-gcloud-and-gsutil
-export CLOUDSDK_PYTHON="/usr/bin/python"
+#export CLOUDSDK_PYTHON="/usr/bin/python"
 
 # kubectl
-export KUBECTL_EXTERNAL_DIFF="colordiff"
-
-# Don't clear screen after quitting man page
-export MANPAGER='less -X';
-# export MANPATH="/usr/local/man:$MANPATH"
+#export KUBECTL_EXTERNAL_DIFF="colordiff"
