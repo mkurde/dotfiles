@@ -19,3 +19,4 @@ timonwong.shellcheck
 wayou.vscode-todo-highlight
 wholroyd.HCL
 yzhang.markdown-all-in-one
+DavidAnson.vscode-markdownlint
