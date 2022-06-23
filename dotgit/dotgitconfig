@@ -1,11 +1,26 @@
 [alias]
+  st = status
+  ci = commit
+  co = checkout
   br = branch
+  df = diff
+  cp = cherry-pick
+  fa = fetch --all
+  fu = fetch upstream
+  rum = rebase upstream/master
+  mum = merge upstream/master
+
+	# master related
+  pom = push origin master
+  com = checkout master
+
+	# verbose outputs
   branches = branch -av
+  tags = tag -l
+  remotes = remote -v
 
   # git change-commits GIT_COMMITTER_NAME "old name" "new name"
   change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ \\\"$`echo $VAR`\\\" = '$OLD' ]]; then export $VAR='$NEW'; fi\" $@; }; f "
-
-  ci = commit
 
   # clean up local, merged branches
   cleanup = "!git branch --merged | grep -v master | xargs -n 1 git branch -d"
@@ -15,16 +30,12 @@
   # cleanup-remote = "!git branch -r --merged | grep master | sed 's/origin\//:/' | args -n 1 git push origin"
   cleanup-remote = "!git branch -r --merged | grep -v "master" | sed 's/origin\\///' | args -n 1 git push --delete origin"
 
-  co = checkout
+  # List contributors with number of commits
   contributors = shortlog --summary --numbered
-  cp = cherry-pick
-  df = diff
 
   # pretty logging with branches and everything!
   lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   logp = log -p
-
-  remotes = remote -v
 
   # from https://help.github.com/articles/remove-sensitive-data
   remove-file = "!f() { git filter-branch -f --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all; }; f"
@@ -32,9 +43,11 @@
   # view status using short format
   s = status -s
 
-  st = status
-  tags = tag -l
   undo = !git reset HEAD~1 --mixed
+
+	# git squash n | Merged the last n commits into one
+  squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
+	ac = !git add -A && git commit -m
 
 [color]
   # Use colors in Git commands that are capable of colored output when
@@ -55,6 +68,8 @@
   frag = magenta bold # line info
   old = red # deletions
   new = green # additions
+	commit = yellow bold
+  whitespace = red reverse
 
 [color "status"]
   added = yellow
@@ -63,6 +78,7 @@
 
 [commit]
   gpgsign = true
+	verbose = true
 
 [core]
   # Use custom `.gitignore` and `.gitattributes`
@@ -72,6 +88,8 @@
   # Make `git rebase` safer on OS X
   # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
   trustctime = false
+  autocrlf = input
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
   # set system editor as default editor
   editor = $EDITOR
@@ -79,7 +97,7 @@
   ignorecase = false
 
   # "cat" instead of paging if content fits onto one screen
-  pager = less -RXF
+  #pager = less -RXF
 
   whitespace = fix
 
@@ -118,18 +136,21 @@
   required = true
   process = git-lfs filter-process
 
-[init]
-  defaultBranch = main
+#[init]
+#  defaultBranch = main
 
 [merge]
   # Include summaries of merged commits in newly created merge commit messages
   log = true
 
+	# use ff only
+  ff = only
+
   # Always show a diffstat at the end of a merge
   stat = true
 
   # External merge tool.
-  tool = Kaleidoscope
+  #tool = Kaleidoscope
   # tool = diffmerge
 
 [mergetool]
@@ -149,15 +170,26 @@
   trustExitCode = true
 
 [pull]
+  ff = only
   rebase = merges
   default = current
 
 [push]
-  default = current
+  # Use the Git 1.x.x default to avoid errors on machines with old Git
+  # installations. To use `simple` instead, add this to your `~/.extra` file:
+  # `git config --global push.default simple`. See http://git.io/mMah-w.
+  # default = matching
+
+	# https://git-scm.com/docs/git-config#git-config-pushdefault
+	default = simple
+
+	# Make `git push` push relevant annotated tags when pushing branches out.
+	followTags = true
 
 [svn]
   rmdir = true
 
+# Enforce SSH
 [url "ssh://git@github.com/"]
   insteadOf = https://github.com/
 
@@ -165,3 +197,6 @@
   name = Markus Kurde
   email = markus.kurde@trivago.com
 	signingkey = 3F5FA90CE4EF74A6
+
+[gpg]
+  program = gpg
