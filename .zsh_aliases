@@ -8,6 +8,7 @@ alias .....="cd ../../../.."
 alias -- -="cd -"
 
 alias ll='ls -la'
+
 alias g="git"
 alias h="history"
 # deactivated in favour of "autojump"
@@ -147,10 +148,9 @@ alias KNS="kubens"
 alias I="istioctl"
 alias MK="minikube"
 
-#alias kx="kubie ctx"
-#alias kns="kubie ns"
-alias kn='kubens'
-alias kx='kubectx'
+# https://github.com/sbstp/kubie#usage
+alias kx="kubie ctx"
+alias kn="kubie ns"
 
 alias kgpall="kubectl get pods --all-namespaces"
 alias kgpwall="kubectl get pods --all-namespaces -w"
@@ -180,6 +180,8 @@ alias kpd="kubectl patch deployment"
 alias kpdd="__kubectl_patch_date deployment"
 alias kpdw="__kubectl_patch_date_watch"
 alias kpdwd="__kubectl_patch_date_watch deployment"
+
+alias kgpw='watch kubectl get pods'
 
 alias kkillc="__kubectl_kill_container"
 
