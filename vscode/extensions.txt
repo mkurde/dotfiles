@@ -1,5 +1,4 @@
 4ops.terraform
-CoenraadS.bracket-pair-colorizer-2
 eamodio.gitlens
 EdgardMessias.clipboard-manager
 EditorConfig.EditorConfig
