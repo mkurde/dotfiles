@@ -38,6 +38,7 @@ brew "htop"
 brew "hugo"
 brew "ipcalc"
 brew "istioctl"
+brew "icu4c" # https://github.com/mickael-menu/zk
 brew "jq"
 brew "just"
 brew "k3d"
