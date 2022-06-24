@@ -18,6 +18,7 @@ wayou.vscode-todo-highlight
 wholroyd.HCL
 yzhang.markdown-all-in-one
 DavidAnson.vscode-markdownlint
+svsool.markdown-memo
 stkb.rewrap
 streetsidesoftware.code-spell-checker-german
 streetsidesoftware.code-spell-checker
