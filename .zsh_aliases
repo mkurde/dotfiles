@@ -7,8 +7,6 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias -- -="cd -"
 
-alias ll='ls -la'
-
 alias g="git"
 alias h="history"
 # deactivated in favour of "autojump"
