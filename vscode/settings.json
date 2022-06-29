@@ -1,198 +1,219 @@
 // Platzieren Sie Ihre Einstellungen in dieser Datei, um die Standardeinstellungen zu überschreiben.
 {
-    "files.autoSave": "onFocusChange",
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "editor.rulers": [
-        80,
-        120
-    ],
-    "git.enableSmartCommit": true,
-    "files.associations": {
-        "*.sls": "jinja",
-        "*.tf": "terraform",
-        "*.yaml": "helm"
-    },
-    "editor.renderWhitespace": "all",
-    "python.pythonPath": "python2",
-    "editor.renderControlCharacters": false,
-    "explorer.sortOrder": "type",
-    "gitlens.advanced.messages": {
-        "suppressCommitHasNoPreviousCommitWarning": false,
-        "suppressCommitNotFoundWarning": false,
-        "suppressFileNotUnderSourceControlWarning": false,
-        "suppressGitVersionWarning": false,
-        "suppressLineUncommittedWarning": false,
-        "suppressNoRepositoryWarning": false,
-        "suppressResultsExplorerNotice": false,
-        "suppressShowKeyBindingsNotice": true,
-        "suppressUpdateNotice": true,
-        "suppressWelcomeNotice": false
-    },
-    "files.trimTrailingWhitespace": true,
-    "[markdown]": {
-        "files.trimTrailingWhitespace": false,
-        "rewrap.autoWrap.enabled": true
-    },
-    "git.autofetch": true,
-    "git.promptToSaveFilesBeforeCommit": "always",
-    "gitlens.keymap": "chorded",
-    "search.followSymlinks": false,
-    "terraform.format": {
-        "enable": false,
-        "ignoreExtensionsOnSave": [
-            ".tfsmurf"
-        ],
-        "formatOnSave": false
-    },
-    "breadcrumbs.enabled": true,
-    "extensions.ignoreRecommendations": false,
-    "gitlens.views.fileHistory.enabled": true,
-    "gitlens.views.lineHistory.enabled": true,
-    "vs-kubernetes": {
-        "vs-kubernetes.minikube-path": "/Users/mkurde/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
-        "vs-kubernetes.kubectl-path.mac": "/Users/mkurde/.vs-kubernetes/tools/kubectl/kubectl",
-        "vs-kubernetes.minikube-path.mac": "/Users/mkurde/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
-        "vs-kubernetes.helm-path.mac": "/Users/mkurde/.vs-kubernetes/tools/helm/darwin-amd64/helm",
-        "vs-kubernetes.draft-path.mac": "/Users/mkurde/.vs-kubernetes/tools/draft/darwin-amd64/draft",
-        "vscode-kubernetes.minikube-path.mac": "/Users/mkurde/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
-        "vs-kubernetes.crd-code-completion": "disabled"
-    },
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "go.useLanguageServer": true,
-    "workbench.settings.editor": "json",
-    "cSpell.userWords": [
-        "alertmanager",
-        "alertmanagers",
-        "chartmuseum",
-        "datacenter",
-        "direnv",
-        "Dominik",
-        "Grafana",
-        "istio",
-        "kubectl",
-        "kubernetes",
-        "labelmap",
-        "Oncall",
-        "Phrasesearch",
-        "Runbook",
-        "saltstack",
-        "serviceaccount",
-        "Solr",
-        "sonarcube",
-        "stackoverflow",
-        "Stepstone",
-        "trivago"
-    ],
-    "vsicons.dontShowNewVersionMessage": true,
-    "workbench.startupEditor": "welcomePage",
-    "yaml.schemas": {
-        "kubernetes": "*yaml"
-    },
-    "cSpell.enabledLanguageIds": [
-        "asciidoc",
-        "c",
-        "cpp",
-        "csharp",
-        "css",
-        "git-commit",
-        "go",
-        "handlebars",
-        "haskell",
-        "html",
-        "jade",
-        "java",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "jsonc",
-        "latex",
-        "less",
-        "makefile",
-        "markdown",
-        "php",
-        "plaintext",
-        "pug",
-        "python",
-        "restructuredtext",
-        "rust",
-        "scala",
-        "scss",
-        "text",
-        "typescript",
-        "typescriptreact",
-        "yaml",
-        "yml"
-    ],
-    "[makefile]": {
-        "editor.insertSpaces": false,
-        "editor.autoIndent": "none"
-    },
-    "diffEditor.ignoreTrimWhitespace": false,
-    "[helm]": {
-        "editor.tabSize": 2,
-        "editor.insertSpaces": true,
-        "editor.detectIndentation": false
-    },
-    "todo-tree.tree.showScanModeButton": false,
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.colorCustomizations": {
+	"diffEditor.maxComputationTime": 0,
+	"diffEditor.ignoreTrimWhitespace": false,
 
-    },
-    "editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
-    "python.languageServer": "Default",
-    "editor.codeActionsOnSave": {},
-    "go.autocompleteUnimportedPackages": true,
-    "editor.insertSpaces": false,
-    "editor.detectIndentation": true,
-    "diffEditor.maxComputationTime": 0,
-    "todo-tree.general.tags": [
-        "BUG",
-        "HACK",
-        "FIXME",
-        "TODO",
-        "XXX",
-        "[ ]",
-        "[x]"
-    ],
-    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
-    "go.toolsManagement.autoUpdate": true,
-    "workbench.editor.untitled.hint": "hidden",
-    "redhat.telemetry.enabled": false,
-    "rewrap.wrappingColumn": 80,
-    "security.workspace.trust.untrustedFiles": "open",
-    "git.autoStash": true,
-    "git.defaultCloneDirectory": "",
-    "git.confirmSync": false,
-    // https://stackoverflow.com/questions/36878344/what-does-git-sync-do-in-vscode
-    "git.rebaseWhenSync": true,
-    "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
-    },
-    "workbench.colorTheme": "GitHub Dark Default",
-    "githubPullRequests.queries": [
-        {
-            "label": "Waiting For My Review",
-            "query": "is:open review-requested:${user}"
-        },
-        {
-            "label": "Assigned To Me",
-            "query": "is:open assignee:${user}"
-        },
-        {
-            "label": "Created By Me",
-            "query": "is:open author:${user}"
-        }
-    ],
-    "python.defaultInterpreterPath": "python2",
-    "terminal.integrated.env.osx": {
-        "FIG_NEW_SESSION": "1"
-    },
-    "editor.accessibilitySupport": "off",
-    "window.zoomLevel": 1,
-    //"rewrap.autoWrap.enabled": true
+	"editor.rulers": [
+		80,
+		120
+	],
+	"editor.renderWhitespace": "all",
+	"editor.renderControlCharacters": false,
+	"editor.suggestSelection": "first",
+	"editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
+	"editor.accessibilitySupport": "off",
+	"editor.codeActionsOnSave": {},
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": true,
+
+	"explorer.openEditors.visible": 0,
+	"explorer.autoReveal": false,
+	"explorer.sortOrder": "type",
+
+	"files.autoSave": "onFocusChange",
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.associations": {
+		"*.sls": "jinja",
+		"*.tf": "terraform",
+		"*.yaml": "helm",
+		"Makefile.*": "makefile",
+		"*.docker": "dockerfile"
+	},
+	"files.trimTrailingWhitespace": true,
+	"files.exclude": {
+		"**/.classpath": true,
+		"**/.project": true,
+		"**/.settings": true,
+		"**/.factorypath": true
+	},
+
+	"python.defaultInterpreterPath": "python2",
+	"python.venvPath": "taste_env",
+	"python.languageServer": "Default",
+
+	"workbench.editor.untitled.hint": "hidden",
+	"workbench.colorTheme": "Default Light+",
+	"workbench.iconTheme": "material-icon-theme",
+	"workbench.startupEditor": "welcomePage",
+	"workbench.settings.editor": "json",
+	"workbench.sideBar.location": "left",
+	"workbench.editor.closeEmptyGroups": false,
+	"workbench.editor.highlightModifiedTabs": true,
+
+	"cloudcode.gke": {
+		"projectIds": [
+			"trv-hs-kubernetes-edge"
+		]
+	},
+
+	"breadcrumbs.enabled": true,
+
+	"shellcheck.run": "onSave",
+
+	"git.enableSmartCommit": true,
+	"git.autofetch": true,
+	"git.promptToSaveFilesBeforeCommit": "always",
+	"git.autoStash": true,
+	"git.defaultCloneDirectory": "",
+	"git.confirmSync": false,
+	// https://stackoverflow.com/questions/36878344/what-does-git-sync-do-in-vscode
+	"git.rebaseWhenSync": true,
+
+	"gitlens.advanced.messages": {
+		"suppressCommitHasNoPreviousCommitWarning": false,
+		"suppressCommitNotFoundWarning": false,
+		"suppressFileNotUnderSourceControlWarning": false,
+		"suppressGitVersionWarning": false,
+		"suppressLineUncommittedWarning": false,
+		"suppressNoRepositoryWarning": false,
+		"suppressResultsExplorerNotice": false,
+		"suppressShowKeyBindingsNotice": true,
+		"suppressUpdateNotice": true,
+		"suppressWelcomeNotice": false
+	},
+
+	"gitlens.keymap": "chorded",
+
+	"search.followSymlinks": false,
+
+	"terraform.format": {
+		"enable": false,
+		"ignoreExtensionsOnSave": [
+			".tfsmurf"
+		],
+		"formatOnSave": false
+	},
+
+	"extensions.ignoreRecommendations": false,
+
+	"vsicons.dontShowNewVersionMessage": true,
+
+	"yaml.schemas": {
+		"kubernetes": "*yaml"
+	},
+
+	"todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+	"redhat.telemetry.enabled": false,
+	"rewrap.wrappingColumn": 80,
+	"security.workspace.trust.untrustedFiles": "open",
+
+	"githubPullRequests.queries": [
+		{
+			"label": "Waiting For My Review",
+			"query": "is:open review-requested:${user}"
+		},
+		{
+			"label": "Assigned To Me",
+			"query": "is:open assignee:${user}"
+		},
+		{
+			"label": "Created By Me",
+			"query": "is:open author:${user}"
+		}
+	],
+
+	"[makefile]": {
+		"editor.insertSpaces": false,
+		"editor.autoIndent": "none"
+	},
+	"[helm]": {
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": false
+	},
+
+	"[markdown]": {
+		"files.trimTrailingWhitespace": false,
+		"rewrap.autoWrap.enabled": true
+	},
+
+	"window.zoomLevel": 1,
+
+	"cSpell.enabledLanguageIds": [
+		"asciidoc",
+		"c",
+		"cpp",
+		"csharp",
+		"css",
+		"git-commit",
+		"go",
+		"handlebars",
+		"haskell",
+		"html",
+		"jade",
+		"java",
+		"javascript",
+		"javascriptreact",
+		"json",
+		"jsonc",
+		"latex",
+		"less",
+		"makefile",
+		"markdown",
+		"php",
+		"plaintext",
+		"pug",
+		"python",
+		"restructuredtext",
+		"rust",
+		"scala",
+		"scss",
+		"text",
+		"typescript",
+		"typescriptreact",
+		"yaml",
+		"yml"
+	],
+
+	"cSpell.userWords": [
+		"alertmanager",
+		"alertmanagers",
+		"chartmuseum",
+		"datacenter",
+		"direnv",
+		"Dominik",
+		"Grafana",
+		"istio",
+		"kubectl",
+		"kubernetes",
+		"labelmap",
+		"Oncall",
+		"Phrasesearch",
+		"Runbook",
+		"saltstack",
+		"serviceaccount",
+		"Solr",
+		"sonarcube",
+		"stackoverflow",
+		"Stepstone",
+		"trivago"
+	],
+
+	"go.autocompleteUnimportedPackages": true,
+	"go.toolsManagement.autoUpdate": true,
+	"go.useLanguageServer": true,
+
+	"todo-tree.tree.showScanModeButton": false,
+	"todo-tree.general.tags": [
+		"BUG",
+		"HACK",
+		"FIXME",
+		"TODO",
+		"XXX",
+		"[ ]",
+		"[x]"
+	],
+
+	"rewrap.autoWrap.enabled": true,
 }
