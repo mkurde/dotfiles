@@ -2,11 +2,8 @@ code --install-extension aaron-bond.better-comments
 code --install-extension bungcip.better-toml
 code --install-extension donjayamanne.githistory
 code --install-extension dracula-theme.theme-dracula
-code --install-extension formulahendry.terminal
 code --install-extension GitHub.github-vscode-theme
 code --install-extension GitHub.vscode-pull-request-github
-code --install-extension golang.go
-code --install-extension Gruntfuggly.todo-tree
 ##code --install-extension hashicorp.terraform
 code --install-extension ipedrazas.kubernetes-snippets
 code --install-extension kevinkyang.auto-comment-blocks
