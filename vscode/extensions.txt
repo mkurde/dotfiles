@@ -20,3 +20,7 @@ svsool.markdown-memo
 stkb.rewrap
 streetsidesoftware.code-spell-checker-german
 streetsidesoftware.code-spell-checker
+golang.go
+formulahendry.terminal
+ms-python.python
+donjayamanne.githistory
