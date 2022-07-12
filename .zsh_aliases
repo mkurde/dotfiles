@@ -185,6 +185,8 @@ alias kkillc="__kubectl_kill_container"
 
 alias kdaf="__kubectl_diff_apply"
 
+alias k8s-dummy="/Users/mkurde/workspace/src/github.com/trivago/kubernetes-dummy-image/k8s-dummy"
+
 __kubectl_kill_container() {
 	kubectl exec -i "$1" -c "$2" -- kill -15 1
 }
