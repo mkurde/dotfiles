@@ -1,4 +1,5 @@
 4ops.terraform
+HashiCorp.terraform
 eamodio.gitlens
 EdgardMessias.clipboard-manager
 EditorConfig.EditorConfig
