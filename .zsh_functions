@@ -308,11 +308,22 @@ k8s-restart() {
 }
 
 function vif() {
-  local file
-  file=$(fzf --preview 'bat --style numbers,changes --color=always {} | head -500') || return
-  "${EDITOR}" "${file}"
+	local file
+	file=$(fzf --preview 'bat --style numbers,changes --color=always {} | head -500') || return
+	"${EDITOR}" "${file}"
 }
 
 klogsfmt() {
 	kubectl logs "$@" | tail -n +10 | jq -r '. | ">>> \(.timestampSeconds) \(.severity) \(.logger)\n\(.message)"'
+}
+
+# useful only for Mac OS Silicon M1,
+# still working but useless for the other platforms
+# https://stackoverflow.com/a/70288080/1161265
+docker() {
+	if [[ `uname -m` == "arm64" ]] && [[ "$1" == "run" || "$1" == "build" ]]; then
+		/usr/local/bin/docker "$1" --platform linux/amd64 "${@:2}"
+	else
+		/usr/local/bin/docker "$@"
+	fi
 }
