@@ -263,17 +263,17 @@ man() {
 
 # iterm user vars
 iterm2_print_user_vars() {
-  iterm2_set_user_var kube_ps1_context "$(kubectl config current-context 2>/dev/null)"
-  iterm2_set_user_var kube_ps1_namespace "$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)"
-  iterm2_set_user_var pwd "$(pwd)"
+	iterm2_set_user_var kube_ps1_context "$(kubectl config current-context 2>/dev/null)"
+	iterm2_set_user_var kube_ps1_namespace "$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)"
+	iterm2_set_user_var pwd "$(pwd)"
 }
 
 # new --------------------------------------------------------------------------
 
 # https://mike.place/2017/fzf-fd/
 function gssh {
-  local machine="$(gcloud compute instances list | fzf | cut -f1 -d' ')"
-  gcloud compute ssh "${machine}" --internal-ip
+	local machine="$(gcloud compute instances list | fzf | cut -f1 -d' ')"
+	gcloud compute ssh "${machine}" --internal-ip
 }
 
 # Run `gh-release` to create a GitHub release of the current remote branch, default tier "edge"
