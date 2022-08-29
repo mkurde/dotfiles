@@ -327,3 +327,12 @@ docker() {
 		/usr/local/bin/docker "$@"
 	fi
 }
+
+# Rebuild and fix terraform lock file for all the platforms
+tf-lock() {
+  terraform providers lock \
+  -platform=linux_amd64 \
+  -platform=darwin_amd64 \
+  -platform=darwin_arm64 \
+  -platform=windows_amd64
+}
