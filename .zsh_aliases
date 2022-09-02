@@ -138,6 +138,7 @@ gcloudcfg() {
 }
 alias G="gcloud"
 alias GX="gcloudcfg"
+alias cloudshell="gcloud cloud-shell ssh --authorize-session"
 
 # Kubernetes and tools
 alias K="kubectl"
