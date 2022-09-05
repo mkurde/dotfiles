@@ -61,7 +61,7 @@ homebrew: ## install homebrew
 
 .PHONY: homebrew-dep
 homebrew-dep: homebrew ## install brews
-	$(CURDIR)/homebrew-dep.sh
+	$(CURDIR)/homebrew-dep.sh && $(CURDIR)/kubectl-setup.sh
 
 .PHONY: homebrew-fonts
 homebrew-fonts: homebrew ## install brews
