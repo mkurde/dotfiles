@@ -336,3 +336,8 @@ tf-lock() {
   -platform=darwin_arm64 \
   -platform=windows_amd64
 }
+
+# decode base64 string
+decode64 () {
+  echo "$1" | base64 -d ; echo
+}
