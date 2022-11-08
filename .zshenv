@@ -94,3 +94,6 @@ export FZF_ALT_C_COMMAND="fd -t d . $HOME"
 
 # kubectl
 #export KUBECTL_EXTERNAL_DIFF="colordiff"
+
+# zk notebook - https://github.com/mickael-menu/zk/blob/main/docs/config-alias.md
+export ZK_NOTEBOOK_DIR="${HOME}/workspace/src/github.com/mkurde/zettelkasten/content"
