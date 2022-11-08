@@ -86,6 +86,7 @@ brew "wget"
 brew "xz"
 brew "yq"
 brew "zsh"
+brew "zoxide"
 
 cask "1password"
 cask "1password-cli"

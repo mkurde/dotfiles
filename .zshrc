@@ -29,6 +29,10 @@ source $ZSH/oh-my-zsh.sh
 ## load autojump
 [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
+## load z - https://github.com/ajeetdsouza/zoxide
+eval "$(zoxide init zsh)"
+rm ~/.zcompdump*; compinit
+
 # google-cloud-sdk PATH and completions
 #[ -f /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc ] \
 #	&& source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
