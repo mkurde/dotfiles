@@ -188,6 +188,7 @@ alias kdaf="__kubectl_diff_apply"
 
 alias k8s-dummy="~/workspace/src/github.com/trivago/kubernetes-dummy-image/k8s-dummy"
 
+alias istio-refresh-sidecars="~/workspace/src/github.com/trivago/gcp-tooling/scripts/kubernetes/refresh-sidecars.sh"
 
 __kubectl_kill_container() {
 	kubectl exec -i "$1" -c "$2" -- kill -15 1
@@ -321,3 +322,7 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # Misc
 alias mykey='pbcopy < ~/.ssh/id_rsa.pub'
+
+# Autojump to zoxide
+alias j="z"
+alias cd="z"
