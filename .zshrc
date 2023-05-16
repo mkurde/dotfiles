@@ -17,7 +17,8 @@ unset file;
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git brew osx sublime kubectl kube-ps1)
-plugins=(brew copyfile copypath direnv git kubectl helm macos autojump zsh-autosuggestions)
+plugins=(brew copyfile copypath direnv git kubectl helm macos zsh-autosuggestions)
+# Disabled: autojump
 
 fpath=($ZSH/custom/plugins/zsh-completions/src $fpath)
 
@@ -27,7 +28,7 @@ source $ZSH/oh-my-zsh.sh
 [ -f "${HOME}/.fzf.zsh" ] && source "${HOME}/.fzf.zsh"
 
 ## load autojump
-[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
+# [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
 ## load z - https://github.com/ajeetdsouza/zoxide
 eval "$(zoxide init zsh)"
