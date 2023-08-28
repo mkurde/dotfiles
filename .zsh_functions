@@ -282,14 +282,18 @@ function gssh {
 gh-release() {
 	local repo;
 	repo=$(git config --get remote.origin.url | sed -E 's/.*\:(.*)\.git/\1/g');
+	echo "repo=${repo}"
 
 	local branch;
 	branch=$(git branch --show-current);
+	echo "branch=${branch}"
 
 	local tier="${1:-edge}";
+	echo "tier=${tier}"
 
 	local release;
 	release=$(date -u "+%Y%m%dT%H%M%SZ-${tier}");
+	echo "release=${release}"
 
 	if [[ "${tier}" == "edge" ]] || [[ "${tier}" == "stage" ]]; then
 		echo "Creating GitHub pre-release on ${tier}"
