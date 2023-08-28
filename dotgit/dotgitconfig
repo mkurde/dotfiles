@@ -200,3 +200,5 @@
 
 [gpg]
   program = gpg
+[init]
+	templateDir = /Users/mkurde/.git-template
