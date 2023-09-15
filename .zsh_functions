@@ -297,10 +297,10 @@ gh-release() {
 
 	if [[ "${tier}" == "edge" ]] || [[ "${tier}" == "stage" ]]; then
 		echo "Creating GitHub pre-release on ${tier}"
-		gh release create "${release}" --prerelease --title "${release}" --notes '' --repo "${repo}" --target "${branch}"
+		gh release create "${release}" --prerelease --title "${release}" --generate-notes --repo "${repo}" --target "${branch}"
 	else
 		echo "Creating GitHub release on ${tier}"
-		gh release create "${release}" --title "${release}" --notes '' --repo "${repo}" --target "${branch}"
+		gh release create "${release}" --title "${release}" --generate-notes --repo "${repo}" --target "${branch}"
 	fi
 
 	echo "Find your workflow here: https://github.com/${repo}/actions"
