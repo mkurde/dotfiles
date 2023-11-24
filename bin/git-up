@@ -30,13 +30,10 @@ else
 	PULL_FLAGS=("--no-rebase")
 fi
 
-readonly old_head
-old_head="$(git rev-parse HEAD)"
-
+readonly old_head="$(git rev-parse HEAD)"
 git pull "${PULL_FLAGS[@]}" "$@"
 
-readonly new_head
-new_head="$(git rev-parse HEAD)"
+readonly new_head="$(git rev-parse HEAD)"
 
 if [[ "${old_head}" != "${new_head}" ]]; then
 	# show diffstat of all changes if we're pulling with --rebase. not
