@@ -349,3 +349,15 @@ decode64 () {
 kcron () {
 	kubectl create job --from=cronjob/"$1" "$1"-"$(date -u "+%Y%m%d-%H%M%S")"
 }
+
+helm-push() {
+  helm dependency update
+  chart_version=$(yq '.version' Chart.yaml)
+  if [[ "${1}" != "--main" ]]; then
+    chart_version="${chart_version}-test${1}"
+  fi
+  echo "Chart version: ${chart_version}"
+  helm cm-push . trivago -u "${CHARTMUSEUM_BASIC_AUTH_USER}" -p "${CHARTMUSEUM_BASIC_AUTH_PASSWORD}" --version="${chart_version}"
+  rm -rf charts
+  rm -f Chart.lock
+}
