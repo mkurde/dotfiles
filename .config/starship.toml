@@ -28,12 +28,11 @@ vicmd_symbol = "«"
 
 [custom.git_user]
 command = "git config user.email"
-directories = [".git"]
-files = [".git"]
-format = "[$symbol ($output )]($style)"
+when = "git -C . rev-parse --is-inside-work-tree &>/dev/null"
+format = "[$symbol($output) ]($style)"
 shell = ["sh"]
 style = "green"
-symbol = ""
+symbol = "\uE0A0"
 
 [directory]
 style = "green"
