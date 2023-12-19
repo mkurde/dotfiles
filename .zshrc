@@ -34,10 +34,6 @@ source $ZSH/oh-my-zsh.sh
 eval "$(zoxide init zsh)"
 rm ~/.zcompdump*; compinit
 
-# google-cloud-sdk PATH and completions
-#[ -f /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc ] \
-#	&& source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
-
 # google-cloud-sdk completions
 [ -f "${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ] \
 	&& source "${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
