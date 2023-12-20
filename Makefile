@@ -33,18 +33,24 @@ dotfiles: ## install the dotfiles for current user
 	git submodule init
 	git submodule update
 
-	for file in $(shell find $(CURDIR) -name ".*" -depth 1 -not -name ".git*" -not -name ".travis.yml" -not -name ".*.swp" -not -name ".gnupg"); do \
+	for file in $(shell find $(CURDIR) -type f -name ".*" -depth 1 -not -name ".git*" -not -name ".travis.yml" -not -name ".*.swp" -not -name ".gnupg"); do \
 		f=$$(basename $${file}); \
-		ln -sfn $$file $(HOME)/$$f; \
+		ln -sfn $$file $${HOME}/$$f; \
 	done; \
 
 	# special handling for .git* files to not mess with the repo
 	for gitfile in $(shell find $(CURDIR)/dotgit -name "dotgit*" -depth 1); do \
 		f=$$(basename $${gitfile}); \
-		ln -sfn $$gitfile $(HOME)/$${f/#dot/\.}; \
+		ln -sfn $$gitfile $${HOME}/$${f/#dot/\.}; \
 	done;
 
-	ln -sfn $(CURDIR)/.config/starship.toml $(HOME)/.config/starship.toml;
+	# special handling for directories
+	ln -sfn $(CURDIR)/.oh-my-zsh $${HOME}/.oh-my-zsh;
+	ln -sfn $(CURDIR)/.zsh-custom $${HOME}/.zsh-custom;
+
+	# we can not link the entire `.config` dir, it would only clutter up the git checkout
+	mkdir -p $${HOME}/.config
+	ln -sfn $(CURDIR)/.config/starship.toml $${HOME}/.config/starship.toml;
 
 .PHONY: macos
 macos: ## setup macos
@@ -56,14 +62,13 @@ vim: ## install amix/vimrc
 
 .PHONY: homebrew
 homebrew: ## install homebrew
-	if ! command -v brew; then
-		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	if ! command -v brew; then \
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
 	fi
-	brew update
 
 .PHONY: homebrew-dep
 homebrew-dep: homebrew ## install brews
-	$(CURDIR)/homebrew-dep.sh && $(CURDIR)/kubectl-setup.sh
+	$(CURDIR)/homebrew-dep.sh
 
 .PHONY: homebrew-fonts
 homebrew-fonts: homebrew ## install brews
