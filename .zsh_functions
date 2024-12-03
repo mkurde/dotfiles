@@ -451,7 +451,7 @@ function port_forward_prometheus_agents {
   LOCAL_PORT=8080
 
   # Loop through each pod and set up port-forward
-  for POD in $PROM_AGENT_PODS; do
+  echo "$PROM_AGENT_PODS" | while read -r POD; do
     kubectl port-forward --address='0.0.0.0' -n monitoring "pod/${POD}" ${LOCAL_PORT}:9090 &
     echo "Port-forwarding ${POD} to http://localhost:${LOCAL_PORT}/targets?search=&scrapePool="
     LOCAL_PORT=$((LOCAL_PORT + 1))
