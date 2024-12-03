@@ -361,3 +361,106 @@ helm-push() {
   rm -rf charts
   rm -f Chart.lock
 }
+
+# Crash a pod by killing the main process
+# Usage: kcrashloop <pod_name> [--namespace <namespace>]
+kcrashloop() {
+  local pod_name=""
+  local namespace=""
+
+  # Check if the first argument is the pod name
+  if [ -n "$1" ]; then
+    pod_name=$1
+    shift
+  else
+    echo "Usage: kcrashloop <pod_name> [--namespace <namespace>]"
+    return 1
+  fi
+
+  # Process remaining arguments for the optional --namespace flag
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --namespace|-n)
+        namespace=$2
+        shift 2
+        ;;
+      *)
+        echo "Usage: kcrashloop <pod_name> [--namespace <namespace>]"
+        return 1
+        ;;
+    esac
+  done
+
+  # If namespace is not set, get the current namespace from kubectl context
+  if [ -z "$namespace" ]; then
+    namespace=$(kubectl config view --minify -o jsonpath='{..namespace}')
+  fi
+
+  echo "Using namespace: ${namespace}"
+  echo "Target pod: ${pod_name}"
+
+  while true; do
+    kubectl exec -it -n "$namespace" "$pod_name" -- sh -c 'kill 1'
+    sleep 3
+  done
+}
+
+# Crash the Grafana Operator pod by killing the main process
+# Usage: kcrashloop_grafana_operator [--namespace <namespace>]
+# Default namespace is "grafana-operator"
+kcrashloop_grafana_operator() {
+  local namespace="grafana-operator"  # Default namespace
+
+  # Process arguments for the optional --namespace flag
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --namespace|-n)
+        namespace=$2
+        shift 2
+        ;;
+      *)
+        echo "Usage: kcrashloop_grafana_operator [--namespace <namespace>]"
+        return 1
+        ;;
+    esac
+  done
+
+  # Find the Grafana Operator pod
+  local pod_name=$(kubectl get pods -n "$namespace" -l app.kubernetes.io/name=grafana-operator -o jsonpath='{.items[0].metadata.name}')
+  if [ -z "$pod_name" ]; then
+    echo "No Grafana Operator pod found in namespace ${namespace}."
+    return 1
+  fi
+
+  echo "Using namespace: ${namespace}"
+  echo "Target pod: ${pod_name}"
+
+  while true; do
+    kubectl exec -it -n "$namespace" "$pod_name" -- sh -c 'kill 1'
+    sleep 3
+  done
+}
+
+# Function to find and port-forward prom-agent-prometheus pods
+# Call the function to start port-forwarding "port_forward_prometheus_agents"
+function port_forward_prometheus_agents {
+  # Get all prom-agent-prometheus pod names
+  PROM_AGENT_PODS=$(kubectl get pods -n monitoring | grep prom-agent-prometheus | awk '{print $1}')
+
+  # Initialize local port number
+  LOCAL_PORT=8080
+
+  # Loop through each pod and set up port-forward
+  for POD in $PROM_AGENT_PODS; do
+    kubectl port-forward --address='0.0.0.0' -n monitoring "pod/${POD}" ${LOCAL_PORT}:9090 &
+    echo "Port-forwarding ${POD} to http://localhost:${LOCAL_PORT}/targets?search=&scrapePool="
+    LOCAL_PORT=$((LOCAL_PORT + 1))
+  done
+}
+
+# Function to close all port-forward background processes
+# Call the function when done "close_port_forwards"
+function close_port_forwards {
+  echo "Closing all port-forward processes..."
+  pkill -f "kubectl port-forward"
+}
