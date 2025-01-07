@@ -1,4 +1,4 @@
-
+# -------------------------------------------------------------------- oh-my-zsh
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -11,19 +11,21 @@ fpath=($ZSH/custom/plugins/zsh-completions/src $fpath)
 
 source $ZSH/oh-my-zsh.sh
 
+# ---------------------------------------------------------------- load dotfiles
+
 # Load the shell dotfiles, and then some:
-# # * ~/.zsh_path         Extend `$PATH`. Always loaded last.
-# # * ~/.zsh_aliases      Shell aliases
-# # * ~/.zsh_functions    Helper functions
-# # * ~/.zsh_dockerfunc   Docker specific helper functions
-# # * ~/.zsh_extra        Other setting that MUST NOT be committed
-# # * ~/.zsh_styles       zstyle overwrites
+# * ~/.zsh_path         Extend `$PATH`. Always loaded last.
+# * ~/.zsh_aliases      Shell aliases
+# * ~/.zsh_functions    Helper functions
+# * ~/.zsh_dockerfunc   Docker specific helper functions
+# * ~/.zsh_extra        Other setting that MUST NOT be committed
+# * ~/.zsh_styles       zstyle overwrites
 for file in ~/.{zsh_path,zsh_aliases,zsh_functions,zsh_dockerfunc,zsh_extra,zsh_zstyles}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
 
-# ------------------------------------------------------------------------ setup
+# ----------------------------------------------------------- setup applications
 
 # load fzf
 [ -f "${HOME}/.fzf.zsh" ] && source "${HOME}/.fzf.zsh"

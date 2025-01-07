@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-#export PATH="${HOME}/bin:${HOME}/.bin:${MAKE_PATH}:${GCLOUD_PATH}:$PATH:$GOPATH/bin:${KREW_PATH}"
-
-# ------------------------------------------------------------------------ $PATH
-
 # ZSH seems to load `/etc/profile` which runs eval `/usr/libexec/path_helper -s`
 # which messes with $PATH.
 # The global /etc/profile gets sourced after `.zshenv` and before `.zprofile`.
@@ -12,6 +8,9 @@
 # Path Loading Order
 # https://medium.com/@rajsek/zsh-bash-startup-files-loading-order-bashrc-zshrc-etc-e30045652f2e
 #~/.zshenv -> /etc/zprofile -> ~/.zprofile -> /etc/zshrc -> ~/.zshrc -> ~/.zlogin
+
+# What should go where?
+# https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout
 
 # User ${HOME} bin
 export PATH="${HOME}/bin:${HOME}/.bin"
