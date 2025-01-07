@@ -1,3 +1,16 @@
+
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+# plugins=(git brew osx sublime kubectl kube-ps1)
+plugins=(brew copyfile copypath direnv git kubectl helm macos zsh-autosuggestions)
+
+fpath=($ZSH/custom/plugins/zsh-completions/src $fpath)
+
+source $ZSH/oh-my-zsh.sh
+
 # Load the shell dotfiles, and then some:
 # # * ~/.zsh_path         Extend `$PATH`. Always loaded last.
 # # * ~/.zsh_aliases      Shell aliases
@@ -12,23 +25,8 @@ unset file;
 
 # ------------------------------------------------------------------------ setup
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-# plugins=(git brew osx sublime kubectl kube-ps1)
-plugins=(brew copyfile copypath direnv git kubectl helm macos zsh-autosuggestions)
-# Disabled: autojump
-
-fpath=($ZSH/custom/plugins/zsh-completions/src $fpath)
-
-source $ZSH/oh-my-zsh.sh
-
 # load fzf
 [ -f "${HOME}/.fzf.zsh" ] && source "${HOME}/.fzf.zsh"
-
-## load autojump
-# [ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
 ## load z - https://github.com/ajeetdsouza/zoxide
 eval "$(zoxide init zsh)"
