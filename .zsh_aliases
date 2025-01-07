@@ -330,3 +330,6 @@ alias mykey='pbcopy < ~/.ssh/id_rsa.pub'
 # Autojump to zoxide
 alias j="z"
 alias cd="z"
+
+# cat -> bat
+alias cat="bat"
