@@ -16,11 +16,12 @@ source $ZSH/oh-my-zsh.sh
 # Load the shell dotfiles, and then some:
 # * ~/.zsh_path         Extend `$PATH`. Always loaded last.
 # * ~/.zsh_aliases      Shell aliases
+# * ~/.zsh_lib          Library functions
 # * ~/.zsh_functions    Helper functions
 # * ~/.zsh_dockerfunc   Docker specific helper functions
 # * ~/.zsh_extra        Other setting that MUST NOT be committed
 # * ~/.zsh_styles       zstyle overwrites
-for file in ~/.{zsh_path,zsh_aliases,zsh_functions,zsh_dockerfunc,zsh_extra,zsh_zstyles}; do
+for file in ~/.{zsh_path,zsh_aliases,zsh_lib,zsh_functions,zsh_dockerfunc,zsh_extra,zsh_zstyles}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
