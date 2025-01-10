@@ -52,6 +52,10 @@ dotfiles: ## install the dotfiles for current user
 	mkdir -p $${HOME}/.config
 	ln -sfn $(CURDIR)/.config/starship.toml $${HOME}/.config/starship.toml;
 
+	# special handling for kubie config
+	mkdir -p $${HOME}/.kube
+	ln -sfn $(CURDIR)/.kube/kubie.yaml $${HOME}/.kube/kubie.yaml;
+
 .PHONY: macos
 macos: ## setup macos
 	$(CURDIR)/macos.sh
