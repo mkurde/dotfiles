@@ -346,10 +346,17 @@ decode64 () {
   echo "$1" | base64 -d ; echo
 }
 
+# Start a Job of a CronJob
 kcron () {
 	kubectl create job --from=cronjob/"$1" "$1"-"$(date -u "+%Y%m%d-%H%M%S")"
 }
 
+# Disable a CronJob
+kcron-disable () {
+	kubectl patch cronjob "$1" -p '{"spec":{"suspend":true}}'
+}
+
+# Push a Chart to ChartMuseum
 helm-push() {
   helm dependency update
   chart_version=$(yq '.version' Chart.yaml)
