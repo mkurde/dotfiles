@@ -18,10 +18,11 @@ source $ZSH/oh-my-zsh.sh
 # * ~/.zsh_aliases      Shell aliases
 # * ~/.zsh_lib          Library functions
 # * ~/.zsh_functions    Helper functions
+# * ~/.zsh_functions_mk Helper functions with mk prefix
 # * ~/.zsh_dockerfunc   Docker specific helper functions
 # * ~/.zsh_extra        Other setting that MUST NOT be committed
 # * ~/.zsh_styles       zstyle overwrites
-for file in ~/.{zsh_path,zsh_aliases,zsh_lib,zsh_functions,zsh_dockerfunc,zsh_extra,zsh_zstyles}; do
+for file in ~/.{zsh_path,zsh_aliases,zsh_lib,zsh_functions,zsh_functions_mk,zsh_dockerfunc,zsh_extra,zsh_zstyles}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;

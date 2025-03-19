@@ -140,9 +140,8 @@ alias G="gcloud"
 alias GX="gcloudcfg"
 alias cloudshell="gcloud cloud-shell ssh --authorize-session"
 
-# Working with charts
-
-alias chart-info='helm show values --repo http://charts.build.trv.cloud'
+# Working with charts (chartmuseum, helm)
+alias chart-info='helm show values --repo http://charts.trv.cloud'
 
 # Kubernetes and tools
 alias K="kubectl"

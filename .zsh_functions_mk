@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Re-generates kubeconfigs for all Rancher clusters
+function mk:rancher:kubeconfig:init() {
+  local configs_dir=~/.kube/rancher.clusters
+  rm -rf "$configs_dir"
+  mkdir -p "$configs_dir"
+  log::info "Generating kubeconfig for Rancher clusters:"
+  while read -r cluster_name cluster_id; do
+    local kubeconfig_file="$configs_dir/$cluster_name.yaml"
+    log::info "  - $cluster_name ($cluster_id)"
+    rancher cluster kubeconfig "$cluster_id" \
+      | yq 'del(.current-context) | .contexts[0].name |= "rancher-" + .' >"$kubeconfig_file"
+  done < <(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}')
+}
+
+
+# Zettelkasten
+
+# Create a new Zettelkasten journal for the current month
+function mk:zk:journal:new() {
+echo "todo"
+}
+
+# Create a new Zettelkasten note
+function mk:zk:note:new() {
+  local title="$*"
+  zk new --working-dir ${ZK_NOTEBOOK_DIR} --title="${title}"
+}
+# Create a new work Zettelkasten note
+function mk:zk:note:work:new() {
+  local title="$*"
+  zk new --working-dir ${ZK_NOTEBOOK_DIR}/work --title="${title}"
+}
