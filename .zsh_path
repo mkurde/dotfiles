@@ -44,6 +44,14 @@ export PATH="${PATH}:${KREW_ROOT}/bin"
 # NixOS
 export PATH="${PATH}:${HOME}/.nix-profile/bin:/nix/var/nix/profiles/default/bin"
 
+# cargo bin
+export PATH="${PATH}:${HOME}/.cargo/bin"
+
+# volta bin
+export PATH="${PATH}:${HOME}/.volta/bin"
+
+# ------------------------------------------------------------------------------
+
 # Original macos zsh path - Part 1
 export PATH="${PATH}:/usr/bin:/usr/sbin:/bin:/sbin"
 
