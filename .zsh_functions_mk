@@ -32,3 +32,19 @@ function mk:zk:note:work:new() {
   local title="$*"
   zk new --working-dir ${ZK_NOTEBOOK_DIR}/work --title="${title}"
 }
+
+
+# Kubernetes
+
+# Start a Job of a CronJob
+mk:k8s:cron () {
+	kubectl create job --from=cronjob/"$1" "$1"-mk-"$(date -u "+%Y%m%d-%H%M%S")"
+}
+# Disable a CronJob
+mk:k8s:cron:suspend () {
+	kubectl patch cronjob "$1" -p '{"spec":{"suspend":true}}'
+}
+# Resume a suspended CronJob
+mk:k8s:cron:resume () {
+  kubectl patch cronjob "$1" -p '{"spec":{"suspend":false}}'
+}
