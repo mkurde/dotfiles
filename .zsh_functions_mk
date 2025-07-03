@@ -48,3 +48,80 @@ mk:k8s:cron:suspend () {
 mk:k8s:cron:resume () {
   kubectl patch cronjob "$1" -p '{"spec":{"suspend":false}}'
 }
+
+# Git
+
+# Clone a git repository
+mk:git:clone() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: mk:git:clone <git-url> or mk:git:clone <org/repo>"
+        echo "Examples:"
+        echo "  mk:git:clone git@github.com:trivago/mars-image-overlay.git"
+        echo "  mk:git:clone trivago/mars-image-overlay"
+        return 1
+    fi
+
+    local input=$1
+    local url
+    local repo_path
+
+    # Check if input looks like a full URL
+    if [[ $input =~ git@github.com: ]] || [[ $input =~ https://github.com/ ]]; then
+        url=$input
+        # Extract path from URL
+        if [[ $url =~ git@github.com:(.+)\.git ]]; then
+            repo_path="github.com/${BASH_REMATCH[1]}"
+        elif [[ $url =~ https://github.com/(.+)\.git ]]; then
+            repo_path="github.com/${BASH_REMATCH[1]}"
+        elif [[ $url =~ https://github.com/(.+) ]]; then
+            repo_path="github.com/${BASH_REMATCH[1]}"
+        fi
+    else
+        # Assume it's org/repo format
+        url="git@github.com:${input}.git"
+        repo_path="github.com/$input"
+    fi
+
+    local base_dir="$HOME/workspace/src/$repo_path"
+    local target_dir="$base_dir"
+    local should_clone=true
+
+    # Check if directory already exists
+    if [[ -d "$target_dir" ]]; then
+        echo "Repository already exists at: $target_dir"
+        echo -n "Clone again in a numbered folder? (y/n): "
+        read -r response
+
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            local counter
+            local repo_name
+            local parent_dir
+            counter=1
+            repo_name=$(basename "$repo_path")
+            parent_dir=$(dirname "$base_dir")
+
+            # Find the next available number
+            while [[ -d "${parent_dir}/${repo_name}_${counter}" ]]; do
+                ((counter++))
+            done
+
+            target_dir="${parent_dir}/${repo_name}_${counter}"
+            echo "Cloning into: $target_dir"
+        else
+            should_clone=false
+        fi
+    fi
+
+    if [[ "$should_clone" == true ]]; then
+        echo "Cloning $url into $target_dir"
+        if git clone "$url" "$target_dir"; then
+            echo "✅ Successfully cloned!"
+        else
+            echo "❌ Failed to clone repository"
+            return 1
+        fi
+    fi
+
+    echo "📁 Switching to: $target_dir"
+    cd "$target_dir" || return 1
+}
