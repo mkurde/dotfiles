@@ -2,7 +2,7 @@
 
 # Re-generates kubeconfigs for all Rancher clusters
 function mk:rancher:kubeconfig:init() {
-  local configs_dir=~/.kube/rancher.clusters
+  local configs_dir="$HOME/.kube/rancher.clusters"
   rm -rf "$configs_dir"
   mkdir -p "$configs_dir"
   log::info "Generating kubeconfig for Rancher clusters:"
@@ -14,23 +14,22 @@ function mk:rancher:kubeconfig:init() {
   done < <(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}')
 }
 
-
 # Zettelkasten
 
 # Create a new Zettelkasten journal for the current month
 function mk:zk:journal:new() {
-echo "todo"
+  echo "todo"
 }
 
 # Create a new Zettelkasten note
 function mk:zk:note:new() {
   local title="$*"
-  zk new --working-dir ${ZK_NOTEBOOK_DIR} --title="${title}"
+  zk new --working-dir "${ZK_NOTEBOOK_DIR}" --title="${title}"
 }
 # Create a new work Zettelkasten note
 function mk:zk:note:work:new() {
   local title="$*"
-  zk new --working-dir ${ZK_NOTEBOOK_DIR}/work --title="${title}"
+  zk new --working-dir "${ZK_NOTEBOOK_DIR}/work" --title="${title}"
 }
 
 
@@ -38,7 +37,7 @@ function mk:zk:note:work:new() {
 
 # Start a Job of a CronJob
 mk:k8s:cron () {
-	kubectl create job --from=cronjob/"$1" "$1"-mk-"$(date -u "+%Y%m%d-%H%M%S")"
+	kubectl create job --from=cronjob/"$1" "$1-mk-$(date -u "+%Y%m%d-%H%M%S")"
 }
 # Disable a CronJob
 mk:k8s:cron:suspend () {
