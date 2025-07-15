@@ -18,12 +18,13 @@ function mk:rancher:kubeconfig:init() {
     fi
   done < <(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}')
 
-  # Backup existing kubeconfig
-  if [ -f "$KUBE_CONFIG" ]; then
-    log::info "Backing up existing kubeconfig at $KUBE_CONFIG"
-    # Create backup file with the current date and time
-    local timestamp=$(date +%Y%m%d-%H%M%S)
-    readonly KUBE_CONFIG_BACKUP="$KUBE_CONFIG.$timestamp.bak"
+      # Backup existing kubeconfig
+    if [ -f "$KUBE_CONFIG" ]; then
+      log::info "Backing up existing kubeconfig at $KUBE_CONFIG"
+      # Create backup file with the current date and time
+      local timestamp
+      timestamp=$(date +%Y%m%d-%H%M%S)
+      readonly KUBE_CONFIG_BACKUP="$KUBE_CONFIG.$timestamp.bak"
     cp "$KUBE_CONFIG" "$KUBE_CONFIG_BACKUP"
     log::info "Created backup of current kubeconfig"
   else
@@ -34,9 +35,7 @@ function mk:rancher:kubeconfig:init() {
   log::info "Merging kubeconfigs..."
   if KUBECONFIG="$tmp_kubeconfig_path" kubectl config view --flatten > "$KUBE_CONFIG_RANCHER"; then
     if KUBECONFIG="$KUBE_CONFIG_RANCHER:$KUBE_CONFIG" kubectl config view --flatten > "$KUBE_CONFIG.new"; then
-      # dont askj to overwrite, just do it
       mv -f "$KUBE_CONFIG.new" "$KUBE_CONFIG"
-      log::info "Successfully updated kubeconfig with $cluster_count cluster contexts"
     else
       log::error "Failed to merge kubeconfigs"
       exit 1
