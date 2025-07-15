@@ -2,7 +2,6 @@
 {
 	"diffEditor.maxComputationTime": 0,
 	"diffEditor.ignoreTrimWhitespace": false,
-
 	"editor.rulers": [
 		80,
 		120
@@ -15,11 +14,10 @@
 	"editor.codeActionsOnSave": {},
 	"editor.insertSpaces": false,
 	"editor.detectIndentation": true,
-
-	"explorer.openEditors.visible": 0,
+	"editor.inlineSuggest.enabled": true,
+	"explorer.openEditors.visible": 9,
 	"explorer.autoReveal": false,
 	"explorer.sortOrder": "type",
-
 	"files.autoSave": "onFocusChange",
 	"files.insertFinalNewline": true,
 	"files.trimFinalNewlines": true,
@@ -28,7 +26,8 @@
 		"*.tf": "terraform",
 		"*.yaml": "helm",
 		"Makefile.*": "makefile",
-		"*.docker": "dockerfile"
+		"*.docker": "dockerfile",
+		"*.json5": "jsonc"
 	},
 	"files.trimTrailingWhitespace": true,
 	"files.exclude": {
@@ -37,13 +36,27 @@
 		"**/.settings": true,
 		"**/.factorypath": true
 	},
-
-	"python.defaultInterpreterPath": "python2",
-	"python.venvPath": "taste_env",
-	"python.languageServer": "Default",
-
-	"workbench.editor.untitled.hint": "hidden",
 	"workbench.colorTheme": "Default Light+",
+	"workbench.colorCustomizations": {
+		"terminal.foreground": "#EFEFEF",
+		"terminal.background": "#1E1E1E",
+		"terminal.ansiBlack": "#000000",
+		"terminal.ansiBrightBlack": "#686966",
+		"terminal.ansiRed": "#c6341b",
+		"terminal.ansiBrightRed": "#e15140",
+		"terminal.ansiGreen": "#6fa430",
+		"terminal.ansiBrightGreen": "#a9e15d",
+		"terminal.ansiYellow": "#c9ae38",
+		"terminal.ansiBrightYellow": "#f9eb77",
+		"terminal.ansiBlue": "#4f78ae",
+		"terminal.ansiBrightBlue": "#8caed4",
+		"terminal.ansiMagenta": "#83668b",
+		"terminal.ansiBrightMagenta": "#b595b4",
+		"terminal.ansiCyan": "#46a4a8",
+		"terminal.ansiBrightCyan": "#73e2e6",
+		"terminal.ansiWhite": "#dbded8",
+		"terminal.ansiBrightWhite": "#f1f1ef",
+	},
 	"workbench.iconTheme": "material-icon-theme",
 	"workbench.startupEditor": "welcomePage",
 	"workbench.settings.editor": "json",
@@ -51,16 +64,10 @@
 	"workbench.editor.closeEmptyGroups": false,
 	"workbench.editor.highlightModifiedTabs": true,
 
-	"cloudcode.gke": {
-		"projectIds": [
-			"trv-hs-kubernetes-edge"
-		]
-	},
+
 
 	"breadcrumbs.enabled": true,
-
 	"shellcheck.run": "onSave",
-
 	"git.enableSmartCommit": true,
 	"git.autofetch": true,
 	"git.promptToSaveFilesBeforeCommit": "always",
@@ -69,24 +76,22 @@
 	"git.confirmSync": false,
 	// https://stackoverflow.com/questions/36878344/what-does-git-sync-do-in-vscode
 	"git.rebaseWhenSync": true,
-
-	"gitlens.advanced.messages": {
-		"suppressCommitHasNoPreviousCommitWarning": false,
-		"suppressCommitNotFoundWarning": false,
-		"suppressFileNotUnderSourceControlWarning": false,
-		"suppressGitVersionWarning": false,
-		"suppressLineUncommittedWarning": false,
-		"suppressNoRepositoryWarning": false,
-		"suppressResultsExplorerNotice": false,
-		"suppressShowKeyBindingsNotice": true,
-		"suppressUpdateNotice": true,
-		"suppressWelcomeNotice": false
+	"git.ignoreRebaseWarning": true,
+	"github.copilot.enable": {
+		"*": true,
+		"plaintext": false,
+		"markdown": true,
+		"scminput": false
 	},
-
+	"github.copilot.advanced": {},
+	"gitlens.advanced.messages": {
+		"suppressIntegrationDisconnectedTooManyFailedRequestsWarning": true,
+		"suppressIntegrationRequestTimedOutWarning": true,
+		"suppressShowKeyBindingsNotice": true,
+		"suppressUpdateNotice": true
+	},
 	"gitlens.keymap": "chorded",
-
 	"search.followSymlinks": false,
-
 	"terraform.format": {
 		"enable": false,
 		"ignoreExtensionsOnSave": [
@@ -94,35 +99,18 @@
 		],
 		"formatOnSave": false
 	},
-
-	"extensions.ignoreRecommendations": false,
-
+	"extensions.ignoreRecommendations": true,
 	"vsicons.dontShowNewVersionMessage": true,
-
 	"yaml.schemas": {
 		"kubernetes": "*yaml"
 	},
-
 	"todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
 	"redhat.telemetry.enabled": false,
 	"rewrap.wrappingColumn": 80,
 	"security.workspace.trust.untrustedFiles": "open",
-
-	"githubPullRequests.queries": [
-		{
-			"label": "Waiting For My Review",
-			"query": "is:open review-requested:${user}"
-		},
-		{
-			"label": "Assigned To Me",
-			"query": "is:open assignee:${user}"
-		},
-		{
-			"label": "Created By Me",
-			"query": "is:open author:${user}"
-		}
-	],
-
+	"[python]": {
+		"editor.formatOnType": true,
+	},
 	"[makefile]": {
 		"editor.insertSpaces": false,
 		"editor.autoIndent": "none"
@@ -132,14 +120,10 @@
 		"editor.insertSpaces": true,
 		"editor.detectIndentation": false
 	},
-
 	"[markdown]": {
 		"files.trimTrailingWhitespace": false,
 		"rewrap.autoWrap.enabled": true
 	},
-
-	"window.zoomLevel": 1,
-
 	"cSpell.enabledLanguageIds": [
 		"asciidoc",
 		"c",
@@ -175,36 +159,39 @@
 		"yaml",
 		"yml"
 	],
-
 	"cSpell.userWords": [
 		"alertmanager",
 		"alertmanagers",
 		"chartmuseum",
+		"cloudfunction",
 		"datacenter",
 		"direnv",
 		"Dominik",
 		"Grafana",
+		"helmv",
 		"istio",
 		"kubectl",
 		"kubernetes",
 		"labelmap",
+		"metafold",
 		"Oncall",
 		"Phrasesearch",
+		"Renovatebot",
+		"Rootly",
 		"Runbook",
 		"saltstack",
 		"serviceaccount",
+		"skaffold",
 		"Solr",
 		"sonarcube",
 		"stackoverflow",
 		"Stepstone",
+		"struct",
 		"trivago"
 	],
-
 	"go.autocompleteUnimportedPackages": true,
 	"go.toolsManagement.autoUpdate": true,
 	"go.useLanguageServer": true,
-
-	"todo-tree.tree.showScanModeButton": false,
 	"todo-tree.general.tags": [
 		"BUG",
 		"HACK",
@@ -214,6 +201,64 @@
 		"[ ]",
 		"[x]"
 	],
-
-	"rewrap.autoWrap.enabled": true,
+	"markdown.extension.tableFormatter.normalizeIndentation": true,
+	"markdown.extension.toc.plaintext": true,
+	"markdown.extension.toc.levels": "2..6",
+	"vs-kubernetes": {
+		"vs-kubernetes.crd-code-completion": "disabled"
+	},
+	"window.commandCenter": true,
+	"terminal.integrated.shellIntegration.enabled": true,
+	"terminal.external.osxExec": "iTerm.app",
+	"terminal.integrated.rightClickBehavior": "default",
+	"terminal.integrated.scrollback": 10000,
+	"terminal.integrated.copyOnSelection": true,
+	"terminal.integrated.profiles.windows": {
+		"Git Bash": {
+			"source": "Git Bash"
+		}
+	},
+	"terminal.integrated.profiles.linux": {
+		"bash": {
+			"path": "bash",
+			"icon": "terminal-bash"
+		},
+		"zsh": {
+			"path": "zsh"
+		},
+		"fish": {
+			"path": "fish"
+		},
+		"tmux": {
+			"path": "tmux",
+			"icon": "terminal-tmux"
+		},
+		"pwsh": {
+			"path": "pwsh",
+			"icon": "terminal-powershell"
+		}
+	},
+	"terminal.integrated.persistentSessionScrollback": 10000,
+	"terminal.integrated.localEchoStyle": "dim",
+	"terminal.integrated.minimumContrastRatio": 1,
+	"memo.links.rules": [
+		"content/"
+	],
+	"window.zoomLevel": 1,
+	"editor.inlineSuggest.showToolbar": "always",
+	"workbench.editor.empty.hint": "hidden",
+	"memo.links.preview.imageMaxHeight": 400,
+	"github.copilot.editor.enableAutoCompletions": true,
+	"githubPullRequests.pullBranch": "never",
+	"[go]": {
+		"editor.insertSpaces": false,
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": "explicit"
+		}
+	},
+	"workbench.editorAssociations": {
+		"*.copilotmd": "vscode.markdown.preview.editor",
+		"*.png": "editor.excalidraw"
+	}
 }
