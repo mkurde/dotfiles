@@ -99,20 +99,20 @@ mk:git:clone() {
     local repo_path
 
     # Check if input looks like a full URL
-    if [[ $input =~ git@github.com: ]] || [[ $input =~ https://github.com/ ]]; then
-        url=$input
+    if [[ "$input" =~ git@github.com: ]] || [[ "$input" =~ https://github.com/ ]]; then
+        url="$input"
         # Extract path from URL
-        if [[ $url =~ git@github.com:(.+)\.git ]]; then
-            repo_path="github.com/${BASH_REMATCH[1]}"
-        elif [[ $url =~ https://github.com/(.+)\.git ]]; then
-            repo_path="github.com/${BASH_REMATCH[1]}"
-        elif [[ $url =~ https://github.com/(.+) ]]; then
-            repo_path="github.com/${BASH_REMATCH[1]}"
+        if [[ "$url" =~ git@github.com: ]]; then
+            # Remove git@github.com: prefix and .git suffix
+            repo_path="github.com/$(echo "$url" | sed 's|git@github.com:||' | sed 's|\.git$||')"
+        elif [[ "$url" =~ https://github.com/ ]]; then
+            # Remove https://github.com/ prefix and .git suffix
+            repo_path="github.com/$(echo "$url" | sed 's|https://github.com/||' | sed 's|\.git$||')"
         fi
     else
         # Assume it's org/repo format
         url="git@github.com:${input}.git"
-        repo_path="github.com/$input"
+        repo_path="github.com/${input}"
     fi
 
     local base_dir="$HOME/workspace/src/$repo_path"
