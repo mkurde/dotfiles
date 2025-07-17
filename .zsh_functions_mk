@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Re-generates kubeconfigs for all Rancher clusters
-function mk:rancher:kubeconfig:init() {
+function mk:k8s:kubeconfig:init() {
   readonly KUBE_CONFIG="$HOME/.kube/config"
   readonly KUBE_CONFIG_RANCHER="$HOME/.kube/rancher-config"
   local tmp_kubeconfig_path=""
@@ -19,7 +19,7 @@ function mk:rancher:kubeconfig:init() {
   done < <(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}')
 
       # Backup existing kubeconfig
-    if [ -f "$KUBE_CONFIG" ]; then
+  if [ -f "$KUBE_CONFIG" ]; then
       log::info "Backing up existing kubeconfig at $KUBE_CONFIG"
       # Create backup file with the current date and time
       local timestamp
@@ -27,6 +27,14 @@ function mk:rancher:kubeconfig:init() {
       readonly KUBE_CONFIG_BACKUP="$KUBE_CONFIG.$timestamp.bak"
     cp "$KUBE_CONFIG" "$KUBE_CONFIG_BACKUP"
     log::info "Created backup of current kubeconfig"
+
+    # Keep only the 5 most recent backups
+    local backup_count
+    backup_count=$(ls -1 "$KUBE_CONFIG".*.bak 2>/dev/null | wc -l)
+    if [ "$backup_count" -gt 5 ]; then
+      log::info "Cleaning up old backups, keeping only 5 most recent"
+      ls -1t "$KUBE_CONFIG".*.bak | tail -n +6 | xargs rm -f
+    fi
   else
     log::warn "No existing kubeconfig found at $KUBE_CONFIG"
   fi
@@ -36,6 +44,9 @@ function mk:rancher:kubeconfig:init() {
   if KUBECONFIG="$tmp_kubeconfig_path" kubectl config view --flatten > "$KUBE_CONFIG_RANCHER"; then
     if KUBECONFIG="$KUBE_CONFIG_RANCHER:$KUBE_CONFIG" kubectl config view --flatten > "$KUBE_CONFIG.new"; then
       mv -f "$KUBE_CONFIG.new" "$KUBE_CONFIG"
+      # Ensure secure permissions (600 - only user readable/writable)
+      chmod 600 "$KUBE_CONFIG"
+      log::info "Set secure permissions (600) on kubeconfig"
     else
       log::error "Failed to merge kubeconfigs"
       exit 1
@@ -44,7 +55,6 @@ function mk:rancher:kubeconfig:init() {
     log::error "Failed to create Rancher kubeconfig"
     exit 1
   fi
-
 }
 
 # Zettelkasten
