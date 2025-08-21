@@ -461,3 +461,52 @@ function close_port_forwards {
   echo "Closing all port-forward processes..."
   pkill -f "kubectl port-forward"
 }
+
+# Enhanced kres function that auto-detects deployment vs statefulset
+# Overrides the oh-my-zsh kubectl plugin version with smarter resource detection
+# Relies on current kubectl namespace context (run in the target namespace)
+# Usage: kres <resource_name> [additional_env_vars...]
+# Example: kres taktleiter
+# Example: kres taktleiter DEBUG=true LOG_LEVEL=info
+function kres() {
+  # Validate required arguments
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: kres <resource_name> [additional_env_vars...]"
+    echo "Example: kres taktleiter"
+    echo "Example: kres taktleiter DEBUG=true"
+    return 1
+  fi
+
+  # Parse arguments
+  local resource_name="${1}"
+  shift
+  local additional_args="${*}"  # Concatenate remaining args as string
+  local resource_type=""
+
+  # Auto-detect resource type: deployment first, then statefulset
+  # Uses current kubectl namespace context
+  echo "Checking for deployment '${resource_name}'..."
+  if kubectl get deployment "${resource_name}" &>/dev/null; then
+    resource_type="deployment"
+    echo "Found deployment: ${resource_name}"
+  elif kubectl get statefulset "${resource_name}" &>/dev/null; then
+    resource_type="statefulset"
+    echo "Found statefulset: ${resource_name}"
+  else
+    echo "Error: Resource '${resource_name}' not found as deployment or statefulset"
+    echo "Searched in current namespace: $(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null || echo 'default')"
+    return 1
+  fi
+
+  # Generate timestamp and apply environment variables
+  local timestamp
+  timestamp=$(date +%Y%m%d%H%M%S)
+  echo "Setting REFRESHED_AT=${timestamp} on ${resource_type}/${resource_name}"
+
+  # Execute kubectl set env using current namespace context
+  if [[ -n "${additional_args}" ]]; then
+    kubectl set env "${resource_type}/${resource_name}" REFRESHED_AT="${timestamp}" ${additional_args}
+  else
+    kubectl set env "${resource_type}/${resource_name}" REFRESHED_AT="${timestamp}"
+  fi
+}
