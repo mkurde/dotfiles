@@ -56,8 +56,8 @@ else
   fpath=($ZSH/custom/plugins/zsh-completions/src $fpath)
   source $ZSH/oh-my-zsh.sh
 
-  # Load all dotfiles including zsh_zstyles
-  for file in ~/.{zsh_path,zsh_aliases,zsh_lib,zsh_functions,zsh_functions_mk,zsh_dockerfunc,zsh_extra,zsh_zstyles}; do
+  # Load all dotfiles including zsh_zstyles and daily updates
+  for file in ~/.{zsh_path,zsh_aliases,zsh_lib,zsh_functions,zsh_functions_mk,zsh_dockerfunc,zsh_extra,zsh_zstyles,zsh_daily_updates}; do
       [ -r "$file" ] && [ -f "$file" ] && source "$file";
   done;
   unset file;

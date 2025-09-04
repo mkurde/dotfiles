@@ -1,0 +1,221 @@
+#!/usr/bin/env bash
+
+# Daily tooling update system
+# Runs once per day on first shell open to keep important CLI tools up-to-date
+
+# Tool configuration - edit these arrays to add/remove tools
+FAST_UPDATE_TOOLS=(bin kubent metafold skaffold)
+SLOW_UPDATE_TOOLS=(brew gcloud)
+
+# System configuration
+DAILY_UPDATE_LOCK_DIR="${HOME}/.cache/zsh-daily-updates"
+DAILY_UPDATE_LOCK_FILE="${DAILY_UPDATE_LOCK_DIR}/last-update-date"
+
+# Ensure cache directory exists
+mkdir -p "${DAILY_UPDATE_LOCK_DIR}"
+
+# Get current date (YYYY-MM-DD format)
+current_date=$(date '+%Y-%m-%d')
+
+# Check if we should run updates today
+mk:daily-update:should_run() {
+    # If lock file doesn't exist, we should run
+    if [[ ! -f "${DAILY_UPDATE_LOCK_FILE}" ]]; then
+        return 0
+    fi
+
+    # Read last update date
+    local last_update_date
+    last_update_date=$(cat "${DAILY_UPDATE_LOCK_FILE}" 2>/dev/null || echo "")
+
+    # If dates differ, we should run
+    if [[ "${current_date}" != "${last_update_date}" ]]; then
+        return 0
+    fi
+
+    # Already updated today
+    return 1
+}
+
+# Update lock file with current date
+mk:daily-update:lock_file() {
+    echo "${current_date}" > "${DAILY_UPDATE_LOCK_FILE}"
+}
+
+# Tool update functions
+mk:daily-update:bin_tool() {
+    local tool="${1}"
+    if ! command -v gh &>/dev/null || ! command -v "${HOME}/bin/bin" &>/dev/null; then
+        echo "Skipping ${tool} (gh or bin not available)"
+        return 1
+    fi
+
+    local github_token
+    github_token=$(gh auth token 2>/dev/null)
+    if [[ -z "${github_token}" ]]; then
+        echo "Skipping ${tool} (no GitHub token)"
+        return 1
+    fi
+
+    echo "Updating ${tool}..."
+    if GITHUB_AUTH_TOKEN="${github_token}" "${HOME}/bin/bin" update "${tool}" -y 2>/dev/null; then
+        echo "${tool} updated"
+        return 0
+    else
+        echo "${tool} up to date"
+        return 1
+    fi
+}
+
+mk:daily-update:simple_tool() {
+    local tool="${1}"
+    local cmd="${2}"
+
+    if ! command -v "${tool}" &>/dev/null; then
+        echo "Skipping ${tool} (not available)"
+        return 1
+    fi
+
+    echo "Updating ${tool}..."
+    if eval "${cmd}" 2>/dev/null; then
+        echo "${tool} updated"
+        return 0
+    else
+        echo "${tool} up to date"
+        return 1
+    fi
+}
+
+# Fast updates (tools that update quickly)
+mk:daily-update:run_fast() {
+    local has_updates=false
+
+    echo "Daily tooling updates ($(date '+%H:%M:%S'))"
+    echo "----------------------------------------"
+
+    # Update bin-managed tools
+    for tool in "${FAST_UPDATE_TOOLS[@]}"; do
+        if mk:daily-update:bin_tool "${tool}"; then
+            has_updates=true
+        fi
+    done
+
+    # Summary
+    echo "----------------------------------------"
+    if [[ "${has_updates}" == "true" ]]; then
+        echo "Updates completed at $(date '+%H:%M:%S')"
+    else
+        echo "All tools up to date"
+    fi
+    echo
+}
+
+# Slow updates (brew, gcloud, etc.) - runs in foreground
+mk:daily-update:run_slow() {
+    local has_updates=false
+    local log_file="${DAILY_UPDATE_LOCK_DIR}/slow-updates.log"
+
+    # Initialize log file
+    echo "=== Slow updates started at $(date) ===" | tee -a "${log_file}"
+    echo "Running slow updates (${SLOW_UPDATE_TOOLS[*]})..." | tee -a "${log_file}"
+    echo "----------------------------------------" | tee -a "${log_file}"
+
+    # Homebrew updates
+    if command -v brew &>/dev/null; then
+        echo "Updating Homebrew..." | tee -a "${log_file}"
+        if (brew update && brew upgrade && brew cleanup) 2>&1 | tee -a "${log_file}"; then
+            echo "Homebrew updated" | tee -a "${log_file}"
+            has_updates=true
+        else
+            echo "Homebrew update failed or up to date" | tee -a "${log_file}"
+        fi
+    else
+        echo "Skipping Homebrew (not available)" | tee -a "${log_file}"
+    fi
+
+    # Google Cloud SDK updates
+    if command -v gcloud &>/dev/null; then
+        echo "Updating Google Cloud SDK..." | tee -a "${log_file}"
+        if gcloud components update --quiet 2>&1 | tee -a "${log_file}"; then
+            echo "Google Cloud SDK updated" | tee -a "${log_file}"
+            has_updates=true
+        else
+            echo "Google Cloud SDK update failed or up to date" | tee -a "${log_file}"
+        fi
+    else
+        echo "Skipping Google Cloud SDK (not available)" | tee -a "${log_file}"
+    fi
+
+    echo "----------------------------------------" | tee -a "${log_file}"
+    if [[ "${has_updates}" == "true" ]]; then
+        echo "Slow updates completed at $(date)" | tee -a "${log_file}"
+    else
+        echo "All slow tools up to date at $(date)" | tee -a "${log_file}"
+    fi
+    echo "" | tee -a "${log_file}"
+}
+
+# Main update function
+mk:daily-update:run() {
+    # Only run in normal interactive shells, not in agent mode or CI
+    if [[ "${AGENT_MODE}" == "true" ]] || [[ -n "${CI}" ]] || [[ "${-}" != *i* ]]; then
+        return 0
+    fi
+
+    # Check if we should run updates
+    if ! mk:daily-update:should_run; then
+        return 0
+    fi
+
+    # Create lock file immediately to prevent race conditions
+    mk:daily-update:lock_file
+
+    # Run fast updates
+    mk:daily-update:run_fast
+
+    # Run slow updates (brew, gcloud) in foreground
+    mk:daily-update:run_slow
+
+    # Show available commands
+    echo "Available commands: daily-updates-force, daily-updates-status, daily-updates-log, daily-updates-stream"
+}
+
+# Helper function to show slow update logs
+mk:daily-update:show_log() {
+    local log_file="${DAILY_UPDATE_LOCK_DIR}/slow-updates.log"
+    if [[ -f "${log_file}" ]]; then
+        echo "Slow update log (last 50 lines):"
+        echo "=================================="
+        tail -n 50 "${log_file}"
+    else
+        echo "No slow update log found yet."
+        echo "Last update: $(cat "${DAILY_UPDATE_LOCK_FILE}" 2>/dev/null || echo "never")"
+    fi
+}
+
+# Helper function to force run updates (for testing)
+mk:daily-update:force() {
+    rm -f "${DAILY_UPDATE_LOCK_FILE}"
+    mk:daily-update:run
+}
+
+# Helper function to stream log in real-time
+mk:daily-update:stream_log() {
+    local log_file="${DAILY_UPDATE_LOCK_DIR}/slow-updates.log"
+    if [[ -f "${log_file}" ]]; then
+        echo "Streaming slow update log (Ctrl+C to exit):"
+        tail -f "${log_file}"
+    else
+        echo "No slow update log found to stream."
+        echo "Run 'daily-updates-force' to create initial log file."
+    fi
+}
+
+# Export helper functions for manual use
+alias daily-updates-force='mk:daily-update:force'
+alias daily-updates-log='mk:daily-update:show_log'
+alias daily-updates-stream='mk:daily-update:stream_log'
+alias daily-updates-status='echo "Last update: $(cat "${DAILY_UPDATE_LOCK_FILE}" 2>/dev/null || echo "never")"'
+
+# Auto-run daily updates
+mk:daily-update:run
