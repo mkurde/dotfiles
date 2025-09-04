@@ -161,8 +161,8 @@ mk:git:clone() {
   if [[ $# -eq 0 ]]; then
       echo "Usage: mk:git:clone <git-url> or mk:git:clone <org/repo>"
       echo "Examples:"
-      echo "  mk:git:clone git@github.com:trivago/mars-image-overlay.git"
-      echo "  mk:git:clone trivago/mars-image-overlay"
+      echo "  mk:git:clone git@github.com:org/foobar.git"
+      echo "  mk:git:clone org/foobar"
       return 1
   fi
 
@@ -271,7 +271,7 @@ mk:helm:push() {
     chart_version="${chart_version}-test${1}"
   fi
   echo "Chart version: ${chart_version}"
-  helm cm-push . trivago -u "${CHARTMUSEUM_BASIC_AUTH_USER}" -p "${CHARTMUSEUM_BASIC_AUTH_PASSWORD}" --version="${chart_version}"
+  helm cm-push . "${CHARTMUSEUM_REPO}" -u "${CHARTMUSEUM_BASIC_AUTH_USER}" -p "${CHARTMUSEUM_BASIC_AUTH_PASSWORD}" --version="${chart_version}"
   rm -rf charts
   rm -f Chart.lock
 }
