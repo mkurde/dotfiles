@@ -19,7 +19,7 @@ indent_style             = space
 [*.md]
 trim_trailing_whitespace    = false
 
-[{*.md,*.neon,*.yaml,*.yml,*.tf,[Jj]ustfile,*.json,*.zsh,*.sh,*.bash,*.txt,.zsh_*}]
+[{*.md,*.neon,*.yaml,*.yml,*.tf,*.json,*.zsh,*.sh,*.bash,*.txt,.zsh_*}]
 indent_size                 = 2
 indent_style                = space
 
