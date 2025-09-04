@@ -1,264 +1,394 @@
 // Platzieren Sie Ihre Einstellungen in dieser Datei, um die Standardeinstellungen zu überschreiben.
 {
-	"diffEditor.maxComputationTime": 0,
-	"diffEditor.ignoreTrimWhitespace": false,
-	"editor.rulers": [
-		80,
-		120
-	],
-	"editor.renderWhitespace": "all",
-	"editor.renderControlCharacters": false,
-	"editor.suggestSelection": "first",
-	"editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
-	"editor.accessibilitySupport": "off",
-	"editor.codeActionsOnSave": {},
-	"editor.insertSpaces": false,
-	"editor.detectIndentation": true,
-	"editor.inlineSuggest.enabled": true,
-	"explorer.openEditors.visible": 9,
-	"explorer.autoReveal": false,
-	"explorer.sortOrder": "type",
-	"files.autoSave": "onFocusChange",
-	"files.insertFinalNewline": true,
-	"files.trimFinalNewlines": true,
-	"files.associations": {
-		"*.sls": "jinja",
-		"*.tf": "terraform",
-		"*.yaml": "helm",
-		"Makefile.*": "makefile",
-		"*.docker": "dockerfile",
-		"*.json5": "jsonc"
-	},
-	"files.trimTrailingWhitespace": true,
-	"files.exclude": {
-		"**/.classpath": true,
-		"**/.project": true,
-		"**/.settings": true,
-		"**/.factorypath": true
-	},
-	"workbench.colorTheme": "Default Light+",
-	"workbench.colorCustomizations": {
-		"terminal.foreground": "#EFEFEF",
-		"terminal.background": "#1E1E1E",
-		"terminal.ansiBlack": "#000000",
-		"terminal.ansiBrightBlack": "#686966",
-		"terminal.ansiRed": "#c6341b",
-		"terminal.ansiBrightRed": "#e15140",
-		"terminal.ansiGreen": "#6fa430",
-		"terminal.ansiBrightGreen": "#a9e15d",
-		"terminal.ansiYellow": "#c9ae38",
-		"terminal.ansiBrightYellow": "#f9eb77",
-		"terminal.ansiBlue": "#4f78ae",
-		"terminal.ansiBrightBlue": "#8caed4",
-		"terminal.ansiMagenta": "#83668b",
-		"terminal.ansiBrightMagenta": "#b595b4",
-		"terminal.ansiCyan": "#46a4a8",
-		"terminal.ansiBrightCyan": "#73e2e6",
-		"terminal.ansiWhite": "#dbded8",
-		"terminal.ansiBrightWhite": "#f1f1ef",
-	},
-	"workbench.iconTheme": "material-icon-theme",
-	"workbench.startupEditor": "welcomePage",
-	"workbench.settings.editor": "json",
-	"workbench.sideBar.location": "left",
-	"workbench.editor.closeEmptyGroups": false,
-	"workbench.editor.highlightModifiedTabs": true,
-
-
-
-	"breadcrumbs.enabled": true,
-	"shellcheck.run": "onSave",
-	"git.enableSmartCommit": true,
-	"git.autofetch": true,
-	"git.promptToSaveFilesBeforeCommit": "always",
-	"git.autoStash": true,
-	"git.defaultCloneDirectory": "",
-	"git.confirmSync": false,
-	// https://stackoverflow.com/questions/36878344/what-does-git-sync-do-in-vscode
-	"git.rebaseWhenSync": true,
-	"git.ignoreRebaseWarning": true,
-	"github.copilot.enable": {
-		"*": true,
-		"plaintext": false,
-		"markdown": true,
-		"scminput": false
-	},
-	"github.copilot.advanced": {},
-	"gitlens.advanced.messages": {
-		"suppressIntegrationDisconnectedTooManyFailedRequestsWarning": true,
-		"suppressIntegrationRequestTimedOutWarning": true,
-		"suppressShowKeyBindingsNotice": true,
-		"suppressUpdateNotice": true
-	},
-	"gitlens.keymap": "chorded",
-	"search.followSymlinks": false,
-	"terraform.format": {
-		"enable": false,
-		"ignoreExtensionsOnSave": [
-			".tfsmurf"
-		],
-		"formatOnSave": false
-	},
-	"extensions.ignoreRecommendations": true,
-	"vsicons.dontShowNewVersionMessage": true,
-	"yaml.schemas": {
-		"kubernetes": "*yaml"
-	},
-	"todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
-	"redhat.telemetry.enabled": false,
-	"rewrap.wrappingColumn": 80,
-	"security.workspace.trust.untrustedFiles": "open",
-	"[python]": {
-		"editor.formatOnType": true,
-	},
-	"[makefile]": {
-		"editor.insertSpaces": false,
-		"editor.autoIndent": "none"
-	},
-	"[helm]": {
-		"editor.tabSize": 2,
-		"editor.insertSpaces": true,
-		"editor.detectIndentation": false
-	},
-	"[markdown]": {
-		"files.trimTrailingWhitespace": false,
-		"rewrap.autoWrap.enabled": true
-	},
-	"cSpell.enabledLanguageIds": [
-		"asciidoc",
-		"c",
-		"cpp",
-		"csharp",
-		"css",
-		"git-commit",
-		"go",
-		"handlebars",
-		"haskell",
-		"html",
-		"jade",
-		"java",
-		"javascript",
-		"javascriptreact",
-		"json",
-		"jsonc",
-		"latex",
-		"less",
-		"makefile",
-		"markdown",
-		"php",
-		"plaintext",
-		"pug",
-		"python",
-		"restructuredtext",
-		"rust",
-		"scala",
-		"scss",
-		"text",
-		"typescript",
-		"typescriptreact",
-		"yaml",
-		"yml"
-	],
-	"cSpell.userWords": [
-		"alertmanager",
-		"alertmanagers",
-		"chartmuseum",
-		"cloudfunction",
-		"datacenter",
-		"direnv",
-		"Dominik",
-		"Grafana",
-		"helmv",
-		"istio",
-		"kubectl",
-		"kubernetes",
-		"labelmap",
-		"metafold",
-		"Oncall",
-		"Phrasesearch",
-		"Renovatebot",
-		"Rootly",
-		"Runbook",
-		"saltstack",
-		"serviceaccount",
-		"skaffold",
-		"Solr",
-		"sonarcube",
-		"stackoverflow",
-		"Stepstone",
-		"struct",
-		"trivago"
-	],
-	"go.autocompleteUnimportedPackages": true,
-	"go.toolsManagement.autoUpdate": true,
-	"go.useLanguageServer": true,
-	"todo-tree.general.tags": [
-		"BUG",
-		"HACK",
-		"FIXME",
-		"TODO",
-		"XXX",
-		"[ ]",
-		"[x]"
-	],
-	"markdown.extension.tableFormatter.normalizeIndentation": true,
-	"markdown.extension.toc.plaintext": true,
-	"markdown.extension.toc.levels": "2..6",
-	"vs-kubernetes": {
-		"vs-kubernetes.crd-code-completion": "disabled"
-	},
-	"window.commandCenter": true,
-	"terminal.integrated.shellIntegration.enabled": true,
-	"terminal.external.osxExec": "iTerm.app",
-	"terminal.integrated.rightClickBehavior": "default",
-	"terminal.integrated.scrollback": 10000,
-	"terminal.integrated.copyOnSelection": true,
-	"terminal.integrated.profiles.windows": {
-		"Git Bash": {
-			"source": "Git Bash"
-		}
-	},
-	"terminal.integrated.profiles.linux": {
-		"bash": {
-			"path": "bash",
-			"icon": "terminal-bash"
-		},
-		"zsh": {
-			"path": "zsh"
-		},
-		"fish": {
-			"path": "fish"
-		},
-		"tmux": {
-			"path": "tmux",
-			"icon": "terminal-tmux"
-		},
-		"pwsh": {
-			"path": "pwsh",
-			"icon": "terminal-powershell"
-		}
-	},
-	"terminal.integrated.persistentSessionScrollback": 10000,
-	"terminal.integrated.localEchoStyle": "dim",
-	"terminal.integrated.minimumContrastRatio": 1,
-	"memo.links.rules": [
-		"content/"
-	],
-	"window.zoomLevel": 1,
-	"editor.inlineSuggest.showToolbar": "always",
-	"workbench.editor.empty.hint": "hidden",
-	"memo.links.preview.imageMaxHeight": 400,
-	"github.copilot.editor.enableAutoCompletions": true,
-	"githubPullRequests.pullBranch": "never",
-	"[go]": {
-		"editor.insertSpaces": false,
-		"editor.formatOnSave": true,
-		"editor.codeActionsOnSave": {
-			"source.organizeImports": "explicit"
-		}
-	},
-	"workbench.editorAssociations": {
-		"*.copilotmd": "vscode.markdown.preview.editor",
-		"*.png": "editor.excalidraw"
-	}
+  "diffEditor.maxComputationTime": 0,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.rulers": [
+    80,
+    120
+  ],
+  "editor.renderWhitespace": "all",
+  "editor.renderControlCharacters": false,
+  "editor.suggestSelection": "first",
+  "editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
+  "editor.accessibilitySupport": "off",
+  "editor.codeActionsOnSave": {},
+  "editor.insertSpaces": false,
+  "editor.detectIndentation": true,
+  "editor.inlineSuggest.enabled": true,
+  "explorer.openEditors.visible": 9,
+  "explorer.autoReveal": false,
+  "explorer.sortOrder": "type",
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.associations": {
+    "*.sls": "jinja",
+    "*.tf": "terraform",
+    "*.tfvars": "terraform-vars",
+    "*.hcl": "hcl",
+    "*.yaml": "helm",
+    "Makefile.*": "makefile",
+    "*.docker": "dockerfile",
+    "*.json5": "jsonc"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "workbench.colorTheme": "Default Light+",
+  "workbench.colorCustomizations": {
+    "terminal.foreground": "#EFEFEF",
+    "terminal.background": "#1E1E1E",
+    "terminal.ansiBlack": "#000000",
+    "terminal.ansiBrightBlack": "#686966",
+    "terminal.ansiRed": "#c6341b",
+    "terminal.ansiBrightRed": "#e15140",
+    "terminal.ansiGreen": "#6fa430",
+    "terminal.ansiBrightGreen": "#a9e15d",
+    "terminal.ansiYellow": "#c9ae38",
+    "terminal.ansiBrightYellow": "#f9eb77",
+    "terminal.ansiBlue": "#4f78ae",
+    "terminal.ansiBrightBlue": "#8caed4",
+    "terminal.ansiMagenta": "#83668b",
+    "terminal.ansiBrightMagenta": "#b595b4",
+    "terminal.ansiCyan": "#46a4a8",
+    "terminal.ansiBrightCyan": "#73e2e6",
+    "terminal.ansiWhite": "#dbded8",
+    "terminal.ansiBrightWhite": "#f1f1ef",
+  },
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.startupEditor": "welcomePage",
+  "workbench.settings.editor": "json",
+  "workbench.sideBar.location": "left",
+  "workbench.editor.closeEmptyGroups": false,
+  "workbench.editor.highlightModifiedTabs": true,
+  "breadcrumbs.enabled": true,
+  "shellcheck.run": "onSave",
+  "git.enableSmartCommit": true,
+  "git.autofetch": true,
+  "git.promptToSaveFilesBeforeCommit": "always",
+  "git.autoStash": true,
+  "git.defaultCloneDirectory": "",
+  "git.confirmSync": false,
+  // https://stackoverflow.com/questions/36878344/what-does-git-sync-do-in-vscode
+  "git.rebaseWhenSync": true,
+  "git.ignoreRebaseWarning": true,
+  "gitlens.advanced.messages": {
+    "suppressIntegrationDisconnectedTooManyFailedRequestsWarning": true,
+    "suppressIntegrationRequestTimedOutWarning": true,
+  },
+  "gitlens.keymap": "chorded",
+  "search.followSymlinks": false,
+  "extensions.ignoreRecommendations": true,
+  "yaml.schemas": {
+    "kubernetes": "*yaml"
+  },
+  "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+  "redhat.telemetry.enabled": false,
+  "rewrap.wrappingColumn": 80,
+  "security.workspace.trust.untrustedFiles": "open",
+  "[python]": {
+    "editor.formatOnType": true,
+  },
+  "[makefile]": {
+    "editor.insertSpaces": false,
+    "editor.autoIndent": "none"
+  },
+  "[helm]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false
+  },
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false,
+    "rewrap.autoWrap.enabled": true,
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "go.toolsManagement.autoUpdate": true,
+  "go.useLanguageServer": true,
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "XXX",
+    "[ ]",
+    "[x]"
+  ],
+  "vs-kubernetes": {
+    "vs-kubernetes.crd-code-completion": "disabled"
+  },
+  "window.commandCenter": true,
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.external.osxExec": "iTerm.app",
+  "terminal.integrated.rightClickBehavior": "default",
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.profiles.windows": {
+    "Git Bash": {
+      "source": "Git Bash"
+    }
+  },
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "bash",
+      "icon": "terminal-bash"
+    },
+    "zsh": {
+      "path": "zsh"
+    },
+    "fish": {
+      "path": "fish"
+    },
+    "tmux": {
+      "path": "tmux",
+      "icon": "terminal-tmux"
+    },
+    "pwsh": {
+      "path": "pwsh",
+      "icon": "terminal-powershell"
+    }
+  },
+  "terminal.integrated.persistentSessionScrollback": 10000,
+  "terminal.integrated.localEchoStyle": "dim",
+  "terminal.integrated.minimumContrastRatio": 1,
+  "terminal.integrated.suggest.enabled": true,
+  "memo.links.rules": [
+    "content/"
+  ],
+  "window.zoomLevel": 1,
+  "editor.inlineSuggest.showToolbar": "always",
+  "workbench.editor.empty.hint": "hidden",
+  "memo.links.preview.imageMaxHeight": 400,
+  "githubPullRequests.pullBranch": "never",
+  "[go]": {
+    "editor.insertSpaces": false,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.png": "editor.excalidraw"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false
+  },
+  // Terraform formatting settings
+  "[terraform]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  "[terraform-vars]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  // HCL formatting settings (for other HashiCorp files)
+  "[hcl]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "hashicorp.terraform"
+  },
+  // General settings that improve Terraform development
+  "terraform.experimentalFeatures.validateOnSave": true,
+  "terraform.languageServer.enable": true,
+  "terraform.codelens.referenceCount": true,
+  "indentRainbow.ignoreErrorLanguages": [
+    "*",
+  ],
+  "githubCodeOwners.format.enabled": true,
+  // Copilot settings
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.chat.agent.thinkingTool": true,
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use conventional commit message format. Respect Github's guidelines for commit messages ie. Title lenght, etc). Always incluse the Jira Task URL is available. Make sure that the title is concise and the description provides necessary context."
+    }
+  ],
+  "chat.mcp.autostart": "newAndOutdated",
+  "chat.agent.maxRequests": 100,
+  "chat.tools.terminal.autoApprove": {
+    // ========== VS Code 1.103 General Pattern Unified Version ==========
+    // === File and Directory Operations ===
+    "/^(ls|pwd|cd|mkdir|find|du|df)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Basic file and directory operations"
+    },
+    "/^(cat|head|tail|less|more|file|stat|wc|sort|uniq|cut|awk|sed|cp|mv|ln|touch)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "File content and manipulation operations"
+    },
+    "/^(tar\\s+-[tx]f|unzip|gunzip)\\s+/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Archive extraction operations"
+    },
+    // === Git Operations (Read-only) ===
+    "/^git\\s+(status|log|diff|branch|show|config\\s+list|remote)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Safe Git read operations"
+    },
+    // === Package Management (Information Only) ===
+    "/^(npm|yarn)\\s+(list|run\\s+(test|lint|build|dev))(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Package manager info and build commands"
+    },
+    "/^(pip\\s+list|pip\\s+show)\\s+/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Python package info"
+    },
+    // === Go Development ===
+    "/^go\\s+(test|build|fmt|mod|run)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Go development commands"
+    },
+    "/^gofmt\\s+/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Go format command"
+    },
+    // === Docker (Read-only) ===
+    "/^docker(-compose)?\\s+(ps|images|logs)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Docker status operations"
+    },
+    // === System Information ===
+    "/^(whoami|date|echo|printf|env|ps|top|netstat|lsof|which|whereis)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "System information commands"
+    },
+    // === Cloud CLI (Read-only) ===
+    "/^aws\\s+(sts\\s+get-caller-identity|s3\\s+ls)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "AWS read operations"
+    },
+    "/^gcloud\\s+(config\\s+list|auth\\s+list)$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Google Cloud info"
+    },
+    "/^az\\s+account\\s+(show|list)$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Azure account info"
+    },
+    "/^kubectl\\s+(get|describe|logs|explain|version|cluster-info|config\\s+(view|get-contexts|current-context))(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Kubernetes read operations"
+    },
+    "/^kubectl\\s+(api-resources|api-versions)$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Kubernetes API info"
+    },
+    "/^kubectl\\s+top\\s+(nodes|pods)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Kubernetes resource usage"
+    },
+    // === GitHub CLI (Read-only) ===
+    "/^gh\\s+(pr|issue)\\s+(list|view|show|diff)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "GitHub CLI read operations"
+    },
+    "/^sleep\\s+[0-9]+\\s+&&\\s+adb\\s+/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Sleep + ADB command combinations"
+    },
+    // === Gradle ===
+    "/^\\.\\/gradlew\\s+(clean|build|test|assemble.*|install.*|lint)(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Gradle build commands"
+    },
+    // === Make ===
+    "/^make(\\s.*)?$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Make build commands"
+    },
+    // === Terraform (Read-only) ===
+    "/^terraform\\s+(plan|show|state\\s+list|state\\s+show|output|version|validate|fmt)\\s*/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Terraform read-only operations"
+    },
+    "/^terraform\\s+init\\s+-backend=false\\s*/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Terraform init without backend changes"
+    },
+    // === Sleep Commands ===
+    "/^sleep\\s+[0-9]+$/i": {
+      "approve": true,
+      "matchCommandLine": true,
+      "description": "Sleep command"
+    },
+    // ========== Deny List ==========
+    // Explicitly deny dangerous commands
+    "/^(rm|rmdir|sudo|su|kill|killall|pkill)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Dangerous system commands"
+    },
+    "/^(curl|wget|ssh|scp|rsync)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Network commands requiring confirmation"
+    },
+    "/^(npm|yarn|pip|brew|apt)\\s+(install|uninstall|add|remove)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Package installation commands"
+    },
+    "/^git\\s+(push|reset\\s+--hard|clean|rebase|add\\s+-A|commit)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Git commands that modify repository"
+    },
+    "/^docker(-compose)?\\s+(run|exec|rm|rmi|up|down)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Docker modification commands"
+    },
+    "/^kubectl\\s+(apply|create|delete|edit|patch|replace|scale|rollout)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Kubernetes write operations"
+    },
+    "/^terraform\\s+(apply|destroy|import|taint|untaint|workspace\\s+new|workspace\\s+delete)\\s*/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Terraform write operations"
+    },
+    "/^(chmod\\s+777|chown)\\s+/i": {
+      "approve": false,
+      "matchCommandLine": true,
+      "description": "Dangerous permission changes"
+    }
+  }
 }
