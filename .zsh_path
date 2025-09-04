@@ -30,8 +30,8 @@ fi
 export PATH="${PATH}:${HOMEBREW_PREFIX_ARM64}/opt/make/libexec/gnubin"
 export PATH="${PATH}:${HOMEBREW_PREFIX_ARM64}/opt/curl/bin"
 
-# Google Cloud SDK
-export PATH="${PATH}:${HOMEBREW_PREFIX_ARM64}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/"
+# Google Cloud SDK (prepend to prioritize gcloud tools like kubectl)
+export PATH="${HOMEBREW_PREFIX_ARM64}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/:${PATH}"
 
 # asdf version manager
 # TODO: use this or source /opt/homebrew/opt/asdf/libexec/asdf.sh ?
