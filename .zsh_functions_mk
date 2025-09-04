@@ -1,5 +1,45 @@
 #!/usr/bin/env bash
 
+# ------------------------------------------------------------------------------ Zettelkasten
+
+# Create a new Zettelkasten note
+function mk:zk:note:new() {
+  local title="$*"
+  zk new --working-dir "${ZK_NOTEBOOK_DIR}" --title="${title}"
+}
+# Create a new work Zettelkasten note
+function mk:zk:note:work:new() {
+  local title="$*"
+  zk new --working-dir "${ZK_NOTEBOOK_DIR}/work" --title="${title}"
+}
+
+# Create a new Zettelkasten journal for the current month
+function mk:zk:journal:new() {
+  echo "todo"
+  log::info "Creating a new Zettelkasten journal for the current month"
+}
+
+
+# ------------------------------------------------------------------------------ Kubernetes
+
+# Start a Job of a CronJob
+mk:k8s:cron () {
+  kubectl create job --from=cronjob/"$1" "$1-mk-$(date -u "+%Y%m%d-%H%M%S")"
+}
+# Disable a CronJob
+mk:k8s:cron:suspend () {
+  kubectl patch cronjob "$1" -p '{"spec":{"suspend":true}}'
+}
+# Resume a suspended CronJob
+mk:k8s:cron:resume () {
+  kubectl patch cronjob "$1" -p '{"spec":{"suspend":false}}'
+}
+
+mk:k8s:restart() {
+  local deployment=$1
+  kubectl patch deployment ${deployment} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"$(date +'%s')\"}}}}}"
+}
+
 # Re-generates kubeconfigs for all Rancher clusters
 function mk:k8s:kubeconfig:init() {
   readonly KUBE_CONFIG="$HOME/.kube/config"
@@ -57,113 +97,219 @@ function mk:k8s:kubeconfig:init() {
   fi
 }
 
-# Zettelkasten
-
-# Create a new Zettelkasten journal for the current month
-function mk:zk:journal:new() {
-  echo "todo"
+# Function to close all port-forward background processes
+# Call the function when done "close_port_forwards"
+function mk:k8s:port:forward:close() {
+  log::info "Closing all port-forward processes..."
+  pkill -f "kubectl port-forward"
 }
 
-# Create a new Zettelkasten note
-function mk:zk:note:new() {
-  local title="$*"
-  zk new --working-dir "${ZK_NOTEBOOK_DIR}" --title="${title}"
-}
-# Create a new work Zettelkasten note
-function mk:zk:note:work:new() {
-  local title="$*"
-  zk new --working-dir "${ZK_NOTEBOOK_DIR}/work" --title="${title}"
+# Enhanced kres function that auto-detects deployment vs statefulset
+# Overrides the oh-my-zsh kubectl plugin version with smarter resource detection
+# Relies on current kubectl namespace context (run in the target namespace)
+# Usage: kres <resource_name> [additional_env_vars...]
+# Example: kres taktleiter
+# Example: kres taktleiter DEBUG=true LOG_LEVEL=info
+function mk:k8s:restart() {
+  # Validate required arguments
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: kres <resource_name> [additional_env_vars...]"
+    echo "Example: kres taktleiter"
+    echo "Example: kres taktleiter DEBUG=true"
+    return 1
+  fi
+
+  # Parse arguments
+  local resource_name="${1}"
+  shift
+  local additional_args="${*}"  # Concatenate remaining args as string
+  local resource_type=""
+
+  # Auto-detect resource type: deployment first, then statefulset
+  # Uses current kubectl namespace context
+  log::info "Checking for deployment '${resource_name}'..."
+  if kubectl get deployment "${resource_name}" &>/dev/null; then
+    resource_type="deployment"
+    log::info "Found deployment: ${resource_name}"
+  elif kubectl get statefulset "${resource_name}" &>/dev/null; then
+    resource_type="statefulset"
+    log::info "Found statefulset: ${resource_name}"
+  else
+    log::error "Error: Resource '${resource_name}' not found as deployment or statefulset"
+    log::info "Searched in current namespace: $(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null || echo 'default')"
+    return 1
+  fi
+
+  # Generate timestamp and apply environment variables
+  local timestamp
+  timestamp=$(date +%Y%m%d%H%M%S)
+  log::info "Setting REFRESHED_AT=${timestamp} on ${resource_type}/${resource_name}"
+
+  # Execute kubectl set env using current namespace context
+  if [[ -n "${additional_args}" ]]; then
+    kubectl set env "${resource_type}/${resource_name}" REFRESHED_AT="${timestamp}" ${additional_args}
+  else
+    kubectl set env "${resource_type}/${resource_name}" REFRESHED_AT="${timestamp}"
+  fi
 }
 
 
-# Kubernetes
-
-# Start a Job of a CronJob
-mk:k8s:cron () {
-	kubectl create job --from=cronjob/"$1" "$1-mk-$(date -u "+%Y%m%d-%H%M%S")"
-}
-# Disable a CronJob
-mk:k8s:cron:suspend () {
-	kubectl patch cronjob "$1" -p '{"spec":{"suspend":true}}'
-}
-# Resume a suspended CronJob
-mk:k8s:cron:resume () {
-  kubectl patch cronjob "$1" -p '{"spec":{"suspend":false}}'
-}
-
-# Git
+# ------------------------------------------------------------------------------ Git
 
 # Clone a git repository
 mk:git:clone() {
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: mk:git:clone <git-url> or mk:git:clone <org/repo>"
-        echo "Examples:"
-        echo "  mk:git:clone git@github.com:trivago/mars-image-overlay.git"
-        echo "  mk:git:clone trivago/mars-image-overlay"
+  if [[ $# -eq 0 ]]; then
+      echo "Usage: mk:git:clone <git-url> or mk:git:clone <org/repo>"
+      echo "Examples:"
+      echo "  mk:git:clone git@github.com:trivago/mars-image-overlay.git"
+      echo "  mk:git:clone trivago/mars-image-overlay"
+      return 1
+  fi
+
+  local input=$1
+  local url
+  local repo_path
+
+  # Check if input looks like a full URL
+  if [[ "$input" =~ git@github.com: ]] || [[ "$input" =~ https://github.com/ ]]; then
+      url="$input"
+      # Extract path from URL
+      if [[ "$url" =~ git@github.com: ]]; then
+          # Remove git@github.com: prefix and .git suffix
+          repo_path="github.com/$(echo "$url" | sed 's|git@github.com:||' | sed 's|\.git$||')"
+      elif [[ "$url" =~ https://github.com/ ]]; then
+          # Remove https://github.com/ prefix and .git suffix
+          repo_path="github.com/$(echo "$url" | sed 's|https://github.com/||' | sed 's|\.git$||')"
+      fi
+  else
+      # Assume it's org/repo format
+      url="git@github.com:${input}.git"
+      repo_path="github.com/${input}"
+  fi
+
+  local base_dir="$HOME/workspace/src/$repo_path"
+  local target_dir="$base_dir"
+  local should_clone=true
+
+  # Check if directory already exists
+  if [[ -d "$target_dir" ]]; then
+      echo "Repository already exists at: $target_dir"
+      echo -n "Clone again in a numbered folder? (y/n): "
+      read -r response
+
+      if [[ "$response" =~ ^[Yy]$ ]]; then
+          local counter
+          local repo_name
+          local parent_dir
+          counter=1
+          repo_name=$(basename "$repo_path")
+          parent_dir=$(dirname "$base_dir")
+
+          # Find the next available number
+          while [[ -d "${parent_dir}/${repo_name}_${counter}" ]]; do
+              ((counter++))
+          done
+
+          target_dir="${parent_dir}/${repo_name}_${counter}"
+          echo "Cloning into: $target_dir"
+      else
+          should_clone=false
+      fi
+  fi
+
+  if [[ "$should_clone" == true ]]; then
+      echo "Cloning $url into $target_dir"
+      if git clone "$url" "$target_dir"; then
+          echo "✅ Successfully cloned!"
+      else
+          echo "❌ Failed to clone repository"
+          return 1
+      fi
+  fi
+
+  echo "📁 Switching to: $target_dir"
+  cd "$target_dir" || return 1
+}
+
+# Run `gh-release` to create a GitHub release of the current remote branch, default tier "edge"
+# Usage: `gh-release` or `gh-release stage` or `gh-release prod`
+# Requires: GitHub CLI gh
+mk:git:gh:release() {
+  local repo;
+  repo=$(git config --get remote.origin.url | sed -E 's/.*\:(.*)\.git/\1/g');
+  echo "repo=${repo}"
+
+  local branch;
+  branch=$(git branch --show-current);
+  echo "branch=${branch}"
+
+  local tier="${1:-edge}";
+  echo "tier=${tier}"
+
+  local release;
+  release=$(date -u "+%Y%m%dT%H%M%SZ-${tier}");
+  echo "release=${release}"
+
+  if [[ "${tier}" == "edge" ]] || [[ "${tier}" == "stage" ]]; then
+      echo "Creating GitHub pre-release on ${tier}"
+      gh release create "${release}" --prerelease --title "${release}" --generate-notes --repo "${repo}" --target "${branch}"
+  else
+      echo "Creating GitHub release on ${tier}"
+      gh release create "${release}" --title "${release}" --generate-notes --repo "${repo}" --target "${branch}"
+  fi
+
+  echo "Find your workflow here: https://github.com/${repo}/actions"
+}
+
+# ------------------------------------------------------------------------------ Helm
+
+# Push a Chart to ChartMuseum
+mk:helm:push() {
+  helm dependency update
+  chart_version=$(yq '.version' Chart.yaml)
+  if [[ "${1}" != "--main" ]]; then
+    chart_version="${chart_version}-test${1}"
+  fi
+  echo "Chart version: ${chart_version}"
+  helm cm-push . trivago -u "${CHARTMUSEUM_BASIC_AUTH_USER}" -p "${CHARTMUSEUM_BASIC_AUTH_PASSWORD}" --version="${chart_version}"
+  rm -rf charts
+  rm -f Chart.lock
+}
+
+# ------------------------------------------------------------------------------ Grafana + Prometheus
+
+# Crash the Grafana Operator pod by killing the main process
+# Usage: kcrashloop_grafana_operator [--namespace <namespace>]
+# Default namespace is "grafana-operator"
+mk:k8s:grafana:crashloop() {
+  local namespace="grafana-operator"  # Default namespace
+
+  # Process arguments for the optional --namespace flag
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --namespace|-n)
+        namespace=$2
+        shift 2
+        ;;
+      *)
+        echo "Usage: kcrashloop_grafana_operator [--namespace <namespace>]"
         return 1
-    fi
+        ;;
+    esac
+  done
 
-    local input=$1
-    local url
-    local repo_path
+  # Find the Grafana Operator pod
+  local pod_name=$(kubectl get pods -n "$namespace" -l app.kubernetes.io/name=grafana-operator -o jsonpath='{.items[0].metadata.name}')
+  if [ -z "$pod_name" ]; then
+    echo "No Grafana Operator pod found in namespace ${namespace}."
+    return 1
+  fi
 
-    # Check if input looks like a full URL
-    if [[ "$input" =~ git@github.com: ]] || [[ "$input" =~ https://github.com/ ]]; then
-        url="$input"
-        # Extract path from URL
-        if [[ "$url" =~ git@github.com: ]]; then
-            # Remove git@github.com: prefix and .git suffix
-            repo_path="github.com/$(echo "$url" | sed 's|git@github.com:||' | sed 's|\.git$||')"
-        elif [[ "$url" =~ https://github.com/ ]]; then
-            # Remove https://github.com/ prefix and .git suffix
-            repo_path="github.com/$(echo "$url" | sed 's|https://github.com/||' | sed 's|\.git$||')"
-        fi
-    else
-        # Assume it's org/repo format
-        url="git@github.com:${input}.git"
-        repo_path="github.com/${input}"
-    fi
+  echo "Using namespace: ${namespace}"
+  echo "Target pod: ${pod_name}"
 
-    local base_dir="$HOME/workspace/src/$repo_path"
-    local target_dir="$base_dir"
-    local should_clone=true
-
-    # Check if directory already exists
-    if [[ -d "$target_dir" ]]; then
-        echo "Repository already exists at: $target_dir"
-        echo -n "Clone again in a numbered folder? (y/n): "
-        read -r response
-
-        if [[ "$response" =~ ^[Yy]$ ]]; then
-            local counter
-            local repo_name
-            local parent_dir
-            counter=1
-            repo_name=$(basename "$repo_path")
-            parent_dir=$(dirname "$base_dir")
-
-            # Find the next available number
-            while [[ -d "${parent_dir}/${repo_name}_${counter}" ]]; do
-                ((counter++))
-            done
-
-            target_dir="${parent_dir}/${repo_name}_${counter}"
-            echo "Cloning into: $target_dir"
-        else
-            should_clone=false
-        fi
-    fi
-
-    if [[ "$should_clone" == true ]]; then
-        echo "Cloning $url into $target_dir"
-        if git clone "$url" "$target_dir"; then
-            echo "✅ Successfully cloned!"
-        else
-            echo "❌ Failed to clone repository"
-            return 1
-        fi
-    fi
-
-    echo "📁 Switching to: $target_dir"
-    cd "$target_dir" || return 1
+  while true; do
+    kubectl exec -it -n "$namespace" "$pod_name" -- sh -c 'kill 1'
+    sleep 3
+  done
 }

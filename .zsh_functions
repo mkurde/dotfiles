@@ -276,41 +276,6 @@ function gssh {
 	gcloud compute ssh "${machine}" --internal-ip
 }
 
-# Run `gh-release` to create a GitHub release of the current remote branch, default tier "edge"
-# Usage: `gh-release` or `gh-release stage` or `gh-release prod`
-# Requires: GitHub CLI gh
-gh-release() {
-	local repo;
-	repo=$(git config --get remote.origin.url | sed -E 's/.*\:(.*)\.git/\1/g');
-	echo "repo=${repo}"
-
-	local branch;
-	branch=$(git branch --show-current);
-	echo "branch=${branch}"
-
-	local tier="${1:-edge}";
-	echo "tier=${tier}"
-
-	local release;
-	release=$(date -u "+%Y%m%dT%H%M%SZ-${tier}");
-	echo "release=${release}"
-
-	if [[ "${tier}" == "edge" ]] || [[ "${tier}" == "stage" ]]; then
-		echo "Creating GitHub pre-release on ${tier}"
-		gh release create "${release}" --prerelease --title "${release}" --generate-notes --repo "${repo}" --target "${branch}"
-	else
-		echo "Creating GitHub release on ${tier}"
-		gh release create "${release}" --title "${release}" --generate-notes --repo "${repo}" --target "${branch}"
-	fi
-
-	echo "Find your workflow here: https://github.com/${repo}/actions"
-}
-
-k8s-restart() {
-	local deployment=$1
-	kubectl patch deployment ${deployment} -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"$(date +'%s')\"}}}}}"
-}
-
 function vif() {
 	local file
 	file=$(fzf --preview 'bat --style numbers,changes --color=always {} | head -500') || return
@@ -344,19 +309,6 @@ tf-lock() {
 # decode base64 string
 decode64 () {
   echo "$1" | base64 -d ; echo
-}
-
-# Push a Chart to ChartMuseum
-helm-push() {
-  helm dependency update
-  chart_version=$(yq '.version' Chart.yaml)
-  if [[ "${1}" != "--main" ]]; then
-    chart_version="${chart_version}-test${1}"
-  fi
-  echo "Chart version: ${chart_version}"
-  helm cm-push . trivago -u "${CHARTMUSEUM_BASIC_AUTH_USER}" -p "${CHARTMUSEUM_BASIC_AUTH_PASSWORD}" --version="${chart_version}"
-  rm -rf charts
-  rm -f Chart.lock
 }
 
 # Crash a pod by killing the main process
@@ -402,41 +354,7 @@ kcrashloop() {
   done
 }
 
-# Crash the Grafana Operator pod by killing the main process
-# Usage: kcrashloop_grafana_operator [--namespace <namespace>]
-# Default namespace is "grafana-operator"
-kcrashloop_grafana_operator() {
-  local namespace="grafana-operator"  # Default namespace
 
-  # Process arguments for the optional --namespace flag
-  while [[ $# -gt 0 ]]; do
-    case $1 in
-      --namespace|-n)
-        namespace=$2
-        shift 2
-        ;;
-      *)
-        echo "Usage: kcrashloop_grafana_operator [--namespace <namespace>]"
-        return 1
-        ;;
-    esac
-  done
-
-  # Find the Grafana Operator pod
-  local pod_name=$(kubectl get pods -n "$namespace" -l app.kubernetes.io/name=grafana-operator -o jsonpath='{.items[0].metadata.name}')
-  if [ -z "$pod_name" ]; then
-    echo "No Grafana Operator pod found in namespace ${namespace}."
-    return 1
-  fi
-
-  echo "Using namespace: ${namespace}"
-  echo "Target pod: ${pod_name}"
-
-  while true; do
-    kubectl exec -it -n "$namespace" "$pod_name" -- sh -c 'kill 1'
-    sleep 3
-  done
-}
 
 # Function to find and port-forward prom-agent-prometheus pods
 # Call the function to start port-forwarding "port_forward_prometheus_agents"
@@ -453,60 +371,4 @@ function port_forward_prometheus_agents {
     echo "Port-forwarding ${POD} to http://localhost:${LOCAL_PORT}/targets?search=&scrapePool="
     LOCAL_PORT=$((LOCAL_PORT + 1))
   done
-}
-
-# Function to close all port-forward background processes
-# Call the function when done "close_port_forwards"
-function close_port_forwards {
-  echo "Closing all port-forward processes..."
-  pkill -f "kubectl port-forward"
-}
-
-# Enhanced kres function that auto-detects deployment vs statefulset
-# Overrides the oh-my-zsh kubectl plugin version with smarter resource detection
-# Relies on current kubectl namespace context (run in the target namespace)
-# Usage: kres <resource_name> [additional_env_vars...]
-# Example: kres taktleiter
-# Example: kres taktleiter DEBUG=true LOG_LEVEL=info
-function kres() {
-  # Validate required arguments
-  if [[ $# -eq 0 ]]; then
-    echo "Usage: kres <resource_name> [additional_env_vars...]"
-    echo "Example: kres taktleiter"
-    echo "Example: kres taktleiter DEBUG=true"
-    return 1
-  fi
-
-  # Parse arguments
-  local resource_name="${1}"
-  shift
-  local additional_args="${*}"  # Concatenate remaining args as string
-  local resource_type=""
-
-  # Auto-detect resource type: deployment first, then statefulset
-  # Uses current kubectl namespace context
-  echo "Checking for deployment '${resource_name}'..."
-  if kubectl get deployment "${resource_name}" &>/dev/null; then
-    resource_type="deployment"
-    echo "Found deployment: ${resource_name}"
-  elif kubectl get statefulset "${resource_name}" &>/dev/null; then
-    resource_type="statefulset"
-    echo "Found statefulset: ${resource_name}"
-  else
-    echo "Error: Resource '${resource_name}' not found as deployment or statefulset"
-    echo "Searched in current namespace: $(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null || echo 'default')"
-    return 1
-  fi
-
-  # Generate timestamp and apply environment variables
-  local timestamp
-  timestamp=$(date +%Y%m%d%H%M%S)
-  echo "Setting REFRESHED_AT=${timestamp} on ${resource_type}/${resource_name}"
-
-  # Execute kubectl set env using current namespace context
-  if [[ -n "${additional_args}" ]]; then
-    kubectl set env "${resource_type}/${resource_name}" REFRESHED_AT="${timestamp}" ${additional_args}
-  else
-    kubectl set env "${resource_type}/${resource_name}" REFRESHED_AT="${timestamp}"
-  fi
 }
