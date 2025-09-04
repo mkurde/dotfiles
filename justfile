@@ -46,6 +46,10 @@ dotfiles:
 	mkdir -p "${HOME}/.config"
 	echo ln -sfn "{{ justfile_directory() }}/.config/starship.toml" "${HOME}/.config/starship.toml"
 
+	# special handling for kubie config
+	mkdir -p "${HOME}/.kube"
+	echo ln -sfn "{{ justfile_directory() }}/.kube/config" "${HOME}/.kube/config"
+
 # setup macos
 macos:
 	"{{ justfile_directory() }}/macos.sh"
@@ -73,7 +77,6 @@ homebrew-fonts: homebrew
 # install vscode extensions
 vscode-ext:
 	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/vscode/extensions.txt"
-
 
 # set up docker-machine. Use docker_machine_name to overwrite machine name
 docker-machine:
