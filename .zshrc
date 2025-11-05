@@ -44,7 +44,7 @@ if [[ "$AGENT_MODE" == "true" ]]; then
   unset file;
 
   # Load essential tools with error suppression
-  eval "$(zoxide init zsh)" 2>/dev/null || true
+  # Note: zoxide will be initialized at the end of this file
 
 else
   # ===============================================
@@ -62,8 +62,7 @@ else
   done;
   unset file;
 
-  # Load zoxide with full features
-  eval "$(zoxide init zsh)"
+  # Refresh completions
   rm ~/.zcompdump*; compinit
 
   # Google Cloud SDK completions
@@ -84,3 +83,14 @@ fi
 [ -f "${HOME}/.fzf.zsh" ] && source "${HOME}/.fzf.zsh"
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
+# ============================================================================
+# INITIALIZE ZOXIDE LAST (as recommended by zoxide documentation)
+# ============================================================================
+if [[ "$AGENT_MODE" == "true" ]]; then
+  # Initialize zoxide with error suppression for agent mode
+  eval "$(zoxide init zsh)" 2>/dev/null || true
+else
+  # Initialize zoxide with full features for normal mode
+  eval "$(zoxide init zsh)"
+fi
