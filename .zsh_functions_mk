@@ -49,6 +49,18 @@ function mk:k8s:kubeconfig:init() {
   rm -rf "$configs_dir"
   mkdir -p "$configs_dir"
   log::info "Generating kubeconfig for Rancher clusters:"
+
+  # Check if Rancher CLI is authenticated
+  local rancher_output
+  rancher_output=$(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}' 2>&1)
+  local rancher_exit=$?
+  if [ $rancher_exit -ne 0 ]; then
+    log::error "Failed to list Rancher clusters (exit code: $rancher_exit)"
+    log::error "Error output: $rancher_output"
+    log::error "Please authenticate with Rancher CLI first: rancher login"
+    return 1
+  fi
+
   while read -r cluster_name cluster_id; do
     local kubeconfig_file="$configs_dir/$cluster_name.yaml"
     log::info "  - $cluster_name ($cluster_id)"
@@ -56,7 +68,7 @@ function mk:k8s:kubeconfig:init() {
       | yq 'del(.current-context) | .contexts[0].name |= "rancher-" + .' >"$kubeconfig_file"; then
       tmp_kubeconfig_path="$kubeconfig_file:$tmp_kubeconfig_path"
     fi
-  done < <(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}')
+  done < <(echo "$rancher_output")
 
       # Backup existing kubeconfig
   if [ -f "$KUBE_CONFIG" ]; then
