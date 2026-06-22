@@ -326,9 +326,11 @@ alias path='echo -e ${PATH//:/\\n}'
 # Misc
 alias mykey='pbcopy < ~/.ssh/id_rsa.pub'
 
-# Autojump to zoxide
-alias j="z"
-alias cd="z"
+# Autojump to zoxide (skip in agent mode — z isn't initialized there)
+if [[ "$AGENT_MODE" != "true" ]]; then
+  alias j="z"
+  alias cd="z"
+fi
 
 # cat -> bat
 alias cat="bat"

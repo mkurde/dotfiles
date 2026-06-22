@@ -1,6 +1,9 @@
 # ------------------------------------------------------------------ agent detection
-# Detect if running in Cursor agent mode to prevent terminal hangs
-if [[ -n "$npm_config_yes" ]] || [[ -n "$CI" ]] || [[ "$-" != *i* ]]; then
+# Detect if running in an AI coding agent (Cursor, Claude Code) or non-interactive
+# shell to prevent terminal hangs and noisy output.
+if [[ -n "$npm_config_yes" ]] || [[ -n "$CI" ]] || [[ "$-" != *i* ]] \
+   || [[ -n "$CLAUDECODE" ]] || [[ -n "$CLAUDE_CODE_ENTRYPOINT" ]] \
+   || [[ "$TERM_PROGRAM" == "claudecode" ]]; then
   export AGENT_MODE=true
 else
   export AGENT_MODE=false
@@ -88,8 +91,9 @@ fi
 # INITIALIZE ZOXIDE LAST (as recommended by zoxide documentation)
 # ============================================================================
 if [[ "$AGENT_MODE" == "true" ]]; then
-  # Initialize zoxide with error suppression for agent mode
-  eval "$(zoxide init zsh)" 2>/dev/null || true
+  # Skip zoxide in agent mode — agents don't use `z` shortcuts and zoxide
+  # emits a noisy init-order warning on every `cd` inside tool calls.
+  :
 else
   # Initialize zoxide with full features for normal mode
   eval "$(zoxide init zsh)"
