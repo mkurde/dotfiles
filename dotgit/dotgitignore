@@ -65,3 +65,5 @@ Temporary Items
 
 # Terraform
 tfplan
+
+**/.claude/settings.local.json
