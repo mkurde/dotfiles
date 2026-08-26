@@ -1,1 +1,42 @@
+# Private overlay, sourced by .zshrc. Never track this - it is where anything
+# machine-specific or work-specific belongs.
+.zsh_extra
 *.zsh_extra
+
+# Credentials and keys: nothing matching these should ever reach a public repo.
+.netrc
+.env
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+*.gpg
+*.asc
+.gnupg/
+.ssh/
+.aws/
+.config/gcloud/
+kubeconfig
+.kube/config
+.kube/*.yaml
+.kube/*.yml
+!.kube/kubie.yaml
+
+# Shell and editor state that records what you worked on
+.viminfo
+.zsh_history
+.bash_history
+.lesshst
+.python_history
+.node_repl_history
+
+# macOS noise
+.DS_Store
+
+# Homebrew 6.x no longer generates or reads this; it only goes stale.
+Brewfile.lock.json

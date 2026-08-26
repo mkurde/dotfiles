@@ -89,9 +89,6 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 # used in `.path`
 export KREW_ROOT="${HOME}/.krew"
 
-# kubernetes dummy immage from Hendrik https://github.com/trivago/kubernetes-dummy-image
-export KUBERNETES_DUMMY_IMAGE="${HOME}/workspace/src/github.com/trivago/kubernetes-dummy-image"
-
 # https://github.com/sharkdp/fd
 export FZF_DEFAULT_COMMAND="fd . $HOME"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
