@@ -111,48 +111,129 @@ mk:daily-update:run_fast() {
 }
 
 # Slow updates (brew, gcloud, etc.) - runs in foreground
+# Rotate the log once it gets large so it does not grow without bound
+mk:daily-update:rotate_log() {
+    local log_file="${1}"
+    local max_bytes=1048576
+
+    [[ -f "${log_file}" ]] || return 0
+
+    local size
+    size=$(wc -c < "${log_file}" | tr -d ' ')
+    if (( size > max_bytes )); then
+        mv -f "${log_file}" "${log_file}.1"
+        echo "(previous log rotated to $(basename "${log_file}").1)" > "${log_file}"
+    fi
+}
+
+# Run one update step: stream it, log it, and return the *command's* exit code.
+# Without this the status of `cmd | tee` is tee's, which is always 0.
+mk:daily-update:run_step() {
+    local desc="${1}" log_file="${2}"
+    shift 2
+
+    local step_status
+    echo "${desc}" | tee -a "${log_file}"
+    # Translate CR to LF: progress redraws would otherwise glue themselves onto
+    # the front of real messages and break the ^anchors in report_issues
+    "${@}" 2>&1 | tr '\r' '\n' | tee -a "${log_file}"
+    if [[ -n "${ZSH_VERSION}" ]]; then
+        step_status=${pipestatus[1]}
+    else
+        step_status=${PIPESTATUS[0]}
+    fi
+
+    if (( step_status != 0 )); then
+        # Logged in the format report_issues looks for, so a step that fails
+        # silently still surfaces
+        echo "Error: ${desc%%...} [${1}] exited with status ${step_status}" | tee -a "${log_file}"
+    fi
+    return ${step_status}
+}
+
+# Slow updates (brew, gcloud, etc.) - runs in foreground
 mk:daily-update:run_slow() {
     local has_updates=false
+    local failures=0
     local log_file="${DAILY_UPDATE_LOCK_DIR}/slow-updates.log"
+
+    mk:daily-update:rotate_log "${log_file}"
 
     # Initialize log file
     echo "=== Slow updates started at $(date) ===" | tee -a "${log_file}"
     echo "Running slow updates (${SLOW_UPDATE_TOOLS[*]})..." | tee -a "${log_file}"
     echo "----------------------------------------" | tee -a "${log_file}"
 
-    # Homebrew updates
+    # Homebrew updates. Each step runs independently: a failing `brew update`
+    # must not silently skip the upgrade and cleanup that follow it.
     if command -v brew &>/dev/null; then
-        echo "Updating Homebrew..." | tee -a "${log_file}"
-        if (brew update && brew upgrade && brew cleanup) 2>&1 | tee -a "${log_file}"; then
-            echo "Homebrew updated" | tee -a "${log_file}"
-            has_updates=true
-        else
-            echo "Homebrew update failed or up to date" | tee -a "${log_file}"
-        fi
+        mk:daily-update:run_step "Updating Homebrew..." "${log_file}" \
+            brew update || failures=$((failures + 1))
+        mk:daily-update:run_step "Upgrading Homebrew packages..." "${log_file}" \
+            brew upgrade || failures=$((failures + 1))
+        mk:daily-update:run_step "Cleaning up Homebrew..." "${log_file}" \
+            brew cleanup || failures=$((failures + 1))
+        has_updates=true
     else
         echo "Skipping Homebrew (not available)" | tee -a "${log_file}"
     fi
 
     # Google Cloud SDK updates
     if command -v gcloud &>/dev/null; then
-        echo "Updating Google Cloud SDK..." | tee -a "${log_file}"
-        if gcloud components update --quiet 2>&1 | tee -a "${log_file}"; then
-            echo "Google Cloud SDK updated" | tee -a "${log_file}"
-            has_updates=true
-        else
-            echo "Google Cloud SDK update failed or up to date" | tee -a "${log_file}"
-        fi
+        mk:daily-update:run_step "Updating Google Cloud SDK..." "${log_file}" \
+            gcloud components update --quiet || failures=$((failures + 1))
+        has_updates=true
     else
         echo "Skipping Google Cloud SDK (not available)" | tee -a "${log_file}"
     fi
 
     echo "----------------------------------------" | tee -a "${log_file}"
     if [[ "${has_updates}" == "true" ]]; then
-        echo "Slow updates completed at $(date)" | tee -a "${log_file}"
+        echo "Slow updates finished at $(date) (${failures} failed step(s))" | tee -a "${log_file}"
     else
-        echo "All slow tools up to date at $(date)" | tee -a "${log_file}"
+        echo "No slow tools available at $(date)" | tee -a "${log_file}"
     fi
     echo "" | tee -a "${log_file}"
+
+    mk:daily-update:report_issues "${log_file}"
+}
+
+# Scan this run's log for errors and surface them loudly + via macOS notification
+mk:daily-update:report_issues() {
+    local log_file="${1}"
+    # Match only the current run (after the last "Slow updates started" marker)
+    local issues
+    issues=$(awk '/=== Slow updates started/{buf=""} {buf=buf$0"\n"} END{printf "%s", buf}' "${log_file}" \
+        | grep -E '^(Error|ERROR|Warning|WARNING):' \
+        | grep -vE 'was renamed to|Hide these hints|Disable this behaviour|Treating .* as a formula|already installed' \
+        || true)
+
+    if [[ -z "${issues}" ]]; then
+        return 0
+    fi
+
+    local count
+    count=$(printf '%s\n' "${issues}" | wc -l | tr -d ' ')
+
+    # Red ANSI for the banner, only if stdout is a tty
+    local r='' n=''
+    if [[ -t 1 ]]; then
+        r=$'\e[1;31m'
+        n=$'\e[0m'
+    fi
+
+    echo
+    echo "${r}========================================${n}"
+    echo "${r}  ${count} ISSUE(S) DURING DAILY UPDATE${n}"
+    echo "${r}========================================${n}"
+    printf '%s\n' "${issues}"
+    echo "${r}========================================${n}"
+    echo "Full log: daily-updates-log"
+    echo
+
+    if command -v osascript &>/dev/null; then
+        osascript -e "display notification \"${count} issue(s) — run daily-updates-log\" with title \"Daily updates\" sound name \"Basso\"" &>/dev/null || true
+    fi
 }
 
 # Main update function
