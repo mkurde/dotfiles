@@ -1,0 +1,4 @@
+[global]
+  # Evaluate .envrc under `set -u`: unset variables become errors instead of
+  # silently expanding to empty strings.
+  strict_env = true

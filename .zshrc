@@ -65,6 +65,12 @@ else
   done;
   unset file;
 
+  # mise version manager (replaces asdf). Must come after ~/.zsh_path so the
+  # shims are not buried under the Homebrew and gcloud PATH prepends.
+  if command -v mise > /dev/null ; then
+    eval "$(mise activate zsh)"
+  fi
+
   # Refresh completions
   rm ~/.zcompdump*; compinit
 

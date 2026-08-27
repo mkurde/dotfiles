@@ -13,7 +13,22 @@ There's a few special files in the hierarchy.
 
 ## Install
 
-check Makefile
+Requires [just](https://github.com/casey/just). Run `just` to list all recipes.
+
+Setup steps (order):
+
+- clone this repo
+- `just macos`
+- `just homebrew`
+- `just homebrew-dep`
+- `just vim`
+- `just dotfiles`
+- `just bin`
+- optional: `just homebrew-fonts`
+- optional: `just vscode-ext`
+- optional: `just kubectl-setup`
+
+Or everything at once: `just all`
 
 ## Before reinstallation
 
