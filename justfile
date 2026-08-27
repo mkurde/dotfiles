@@ -5,10 +5,8 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 set unstable
 set script-interpreter := ['bash', '-euxo', 'pipefail']
 
-docker_machine_name	:= "default"
-
 _default:
-  @just --list
+	@just --list
 
 # Installs everything
 all: bin dotfiles macos vim homebrew-dep
@@ -35,20 +33,31 @@ dotfiles:
 	# special handling for .git* files to not mess with the repo
 	while IFS= read -r file; do
 		f="$(basename ${file})"
-		echo ln -sfn "${file}" "${HOME}/${f/#dot/\.}"
+		ln -sfn "${file}" "${HOME}/${f/#dot/\.}"
 	done< <(find {{ justfile_directory() }}/dotgit -name "dotgit*" -depth 1)
 
 	# special handling for directories
-	echo ln -sfn "{{ justfile_directory() }}/.oh-my-zsh" "${HOME}/.oh-my-zsh"
-	echo ln -sfn "{{ justfile_directory() }}/.zsh-custom" "${HOME}/.zsh-custom"
+	ln -sfn "{{ justfile_directory() }}/.oh-my-zsh" "${HOME}/.oh-my-zsh"
+	ln -sfn "{{ justfile_directory() }}/.zsh-custom" "${HOME}/.zsh-custom"
 
 	# we can not link the entire `.config` dir, it would only clutter up the git checkout
 	mkdir -p "${HOME}/.config"
-	echo ln -sfn "{{ justfile_directory() }}/.config/starship.toml" "${HOME}/.config/starship.toml"
+	ln -sfn "{{ justfile_directory() }}/.config/starship.toml" "${HOME}/.config/starship.toml"
+
+	mkdir -p "${HOME}/.config/direnv"
+	ln -sfn "{{ justfile_directory() }}/.config/direnv/direnv.toml" "${HOME}/.config/direnv/direnv.toml"
+
+	mkdir -p "${HOME}/.config/mise"
+	ln -sfn "{{ justfile_directory() }}/.config/mise/config.toml" "${HOME}/.config/mise/config.toml"
+
+	# nushell reads Application Support on macOS, but ~/.config when XDG_CONFIG_HOME is set
+	mkdir -p "${HOME}/.config/nushell" "${HOME}/Library/Application Support/nushell"
+	ln -sfn "{{ justfile_directory() }}/.config/nushell/config.nu" "${HOME}/.config/nushell/config.nu"
+	ln -sfn "{{ justfile_directory() }}/.config/nushell/config.nu" "${HOME}/Library/Application Support/nushell/config.nu"
 
 	# special handling for kubie config
 	mkdir -p "${HOME}/.kube"
-	echo ln -sfn "{{ justfile_directory() }}/.kube/config" "${HOME}/.kube/config"
+	ln -sfn "{{ justfile_directory() }}/.kube/kubie.yaml" "${HOME}/.kube/kubie.yaml"
 
 # setup macos
 macos:
@@ -69,7 +78,7 @@ homebrew:
 homebrew-dep: homebrew
 	"{{ justfile_directory() }}/homebrew-dep.sh"
 
-# install front via homebrew
+# install fonts via homebrew
 [script]
 homebrew-fonts: homebrew
 	brew bundle install --file "{{ justfile_directory() }}/Brewfile-fonts"
@@ -78,9 +87,9 @@ homebrew-fonts: homebrew
 vscode-ext:
 	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/vscode/extensions.txt"
 
-# set up docker-machine. Use docker_machine_name to overwrite machine name
-docker-machine:
-	"{{ justfile_directory() }}/docker-machine.sh" "{{ docker_machine_name }}"
+# set up kubectl plugins and completions
+kubectl-setup:
+	"{{ justfile_directory() }}/kubectl-setup.sh"
 
 # Runs all the tests on the files in the repository.
 test: shellcheck
