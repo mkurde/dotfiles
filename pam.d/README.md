@@ -25,6 +25,6 @@ Source: <https://antkowiak.it/en/enable-touchid-for-sudo-in-iterm-2/>
 
    iTem2 Preference Menu
    ![iTerm2 Preference Menu](resources/images/iterm2_preference.png)
-  
+
    iTerm2 Preference - Advance Menu
    ![iTerm2 Preference Advance Menu](resources/images/iterm2_preference_advanced.png)
