@@ -46,6 +46,7 @@ dotfiles:
 
 	mkdir -p "${HOME}/.config/direnv"
 	ln -sfn "{{ justfile_directory() }}/.config/direnv/direnv.toml" "${HOME}/.config/direnv/direnv.toml"
+	ln -sfn "{{ justfile_directory() }}/.config/direnv/direnvrc" "${HOME}/.config/direnv/direnvrc"
 
 	mkdir -p "${HOME}/.config/mise"
 	ln -sfn "{{ justfile_directory() }}/.config/mise/config.toml" "${HOME}/.config/mise/config.toml"
