@@ -7,6 +7,10 @@
 FAST_UPDATE_TOOLS=(bin kubent metafold skaffold)
 SLOW_UPDATE_TOOLS=(brew gcloud)
 
+# Casks to skip during `brew upgrade --cask` (they self-update and would fail
+# the run if open, e.g. VS Code holding an app lock).
+CASK_UPGRADE_EXCLUDE=(visual-studio-code cursor)
+
 # System configuration
 DAILY_UPDATE_LOCK_DIR="${HOME}/.cache/zsh-daily-updates"
 DAILY_UPDATE_LOCK_FILE="${DAILY_UPDATE_LOCK_DIR}/last-update-date"
@@ -169,8 +173,20 @@ mk:daily-update:run_slow() {
     if command -v brew &>/dev/null; then
         mk:daily-update:run_step "Updating Homebrew..." "${log_file}" \
             brew update || failures=$((failures + 1))
-        mk:daily-update:run_step "Upgrading Homebrew packages..." "${log_file}" \
-            brew upgrade || failures=$((failures + 1))
+        mk:daily-update:run_step "Upgrading Homebrew formulae..." "${log_file}" \
+            brew upgrade --formula || failures=$((failures + 1))
+        # --force lets casks overwrite an app already present in the Caskroom
+        # (e.g. installed/updated outside brew), which otherwise aborts the run.
+        # Upgrade only outdated casks that aren't in CASK_UPGRADE_EXCLUDE.
+        local -a outdated_casks upgrade_casks
+        outdated_casks=(${(f)"$(brew outdated --cask --quiet 2>/dev/null)"})
+        upgrade_casks=(${outdated_casks:|CASK_UPGRADE_EXCLUDE})
+        if (( ${#upgrade_casks} )); then
+            mk:daily-update:run_step "Upgrading Homebrew casks..." "${log_file}" \
+                brew upgrade --cask --force "${upgrade_casks[@]}" || failures=$((failures + 1))
+        else
+            echo "No casks to upgrade (or all excluded)" | tee -a "${log_file}"
+        fi
         mk:daily-update:run_step "Cleaning up Homebrew..." "${log_file}" \
             brew cleanup || failures=$((failures + 1))
         has_updates=true
