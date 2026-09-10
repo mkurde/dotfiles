@@ -95,6 +95,25 @@ __git_worktree_init() {
 	fi
 }
 
+### alias gsw overwrite, orginal in oh-my-zsh
+alias gsw="__git_worktree_switch"
+
+__git_worktree_switch() {
+  local branch="$1"
+  [ -z "$branch" ] && { git switch; return; }
+
+  local wt
+  wt=$(git worktree list --porcelain \
+    | awk -v b="refs/heads/$branch" '/^worktree /{p=$2} /^branch /{if ($2==b){print p; exit}}')
+
+  if [ -n "$wt" ]; then
+    cd "$wt" || return
+  else
+    git switch "$branch"
+  fi
+}
+
+
 # Docker
 alias D="docker"
 alias DR="docker run --rm -it"
