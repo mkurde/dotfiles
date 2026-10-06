@@ -689,6 +689,9 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 # Don’t display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
+# Do not open the Profiles window on launch (Settings → General → Startup)
+defaults write com.googlecode.iterm2 OpenBookmark -bool false
+
 ###############################################################################
 # Time Machine                                                                #
 ###############################################################################

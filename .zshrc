@@ -71,9 +71,6 @@ else
     eval "$(mise activate zsh)"
   fi
 
-  # Refresh completions
-  rm ~/.zcompdump*; compinit
-
   # Google Cloud SDK completions
   [ -f "${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ] \
     && source "${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"

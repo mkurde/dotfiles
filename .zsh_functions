@@ -261,11 +261,28 @@ man() {
 		man "$@"
 }
 
-# iterm user vars
+# iterm user vars — cache kubectl until kubeconfig mtime changes
+typeset -g _IT2_KUBE_MTIME= _IT2_KUBE_CTX= _IT2_KUBE_NS=
+zmodload -F zsh/stat b:zstat 2>/dev/null
+
 iterm2_print_user_vars() {
-	iterm2_set_user_var kube_ps1_context "$(kubectl config current-context 2>/dev/null)"
-	iterm2_set_user_var kube_ps1_namespace "$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)"
-	iterm2_set_user_var pwd "$(pwd)"
+	local kubeconfig="${KUBECONFIG:-${HOME}/.kube/config}"
+	kubeconfig="${kubeconfig%%:*}"
+	local mtime=0
+	local -a _it2_st
+	if [[ -r "$kubeconfig" ]] && zstat -A _it2_st +mtime "$kubeconfig" 2>/dev/null; then
+		mtime="${_it2_st[1]}"
+	fi
+
+	if [[ "$mtime" != "$_IT2_KUBE_MTIME" ]]; then
+		_IT2_KUBE_MTIME="$mtime"
+		_IT2_KUBE_CTX="$(kubectl config current-context 2>/dev/null)"
+		_IT2_KUBE_NS="$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)"
+	fi
+
+	iterm2_set_user_var kube_ps1_context "$_IT2_KUBE_CTX"
+	iterm2_set_user_var kube_ps1_namespace "$_IT2_KUBE_NS"
+	iterm2_set_user_var pwd "$PWD"
 }
 
 # new --------------------------------------------------------------------------
