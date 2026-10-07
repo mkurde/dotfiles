@@ -5,6 +5,30 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-10-06: `just macos` runs `macos-defaults.sh`
+
+### Context
+
+`macos.sh` was the 950-line mathiasbynens `.macos`. Most of it targets
+apps or features that no longer exist (Dashboard, Twitter.app, iCal,
+Spotlight `orderedItems`). Before migrating to a new MacBook it was hard
+to tell which lines still mattered.
+
+### Split into `macos-defaults.sh` and `macos-legacy.sh`
+
+- **Decision:** `macos.sh` is renamed to `macos-legacy.sh` and is no
+  longer run. `macos-defaults.sh` is dsiebel's short list, with my
+  values where they differ, plus the legacy settings I still use. The
+  iTerm `PromptOnQuit` and `OpenBookmark` pins moved with it.
+- **Why:** A short, current script is easier to review on a fresh
+  machine. Mine differs from dsiebel's on purpose: software updates
+  stay on, scroll bars `Always`, column view, font smoothing `2`, and
+  `hibernatemode 3`. Keep `hibernatemode 3` without his `sleepimage`
+  removal, because mode 3 writes RAM to that file.
+- Settings not carried over (Spotlight index rebuild, `LSQuarantine`
+  off, Mail, Chrome, App Store debug menus) stay in `macos-legacy.sh`
+  for reference.
+
 ## 2026-09-21: iTerm Profiles window on every launch
 
 ### Context

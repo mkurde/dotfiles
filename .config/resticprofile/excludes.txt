@@ -1,0 +1,9 @@
+# shared excludes for all resticprofile backup profiles
+**/._*
+**/.DS_Store
+**/.Trash
+**/.Spotlight-V100
+**/.fseventsd
+**/.TemporaryItems
+**/*.tmp
+**/Thumbs.db

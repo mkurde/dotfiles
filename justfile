@@ -56,13 +56,17 @@ dotfiles:
 	ln -sfn "{{ justfile_directory() }}/.config/nushell/config.nu" "${HOME}/.config/nushell/config.nu"
 	ln -sfn "{{ justfile_directory() }}/.config/nushell/config.nu" "${HOME}/Library/Application Support/nushell/config.nu"
 
+	mkdir -p "${HOME}/.config/resticprofile"
+	ln -sfn "{{ justfile_directory() }}/.config/resticprofile/profiles.yaml" "${HOME}/.config/resticprofile/profiles.yaml"
+	ln -sfn "{{ justfile_directory() }}/.config/resticprofile/excludes.txt" "${HOME}/.config/resticprofile/excludes.txt"
+
 	# special handling for kubie config
 	mkdir -p "${HOME}/.kube"
 	ln -sfn "{{ justfile_directory() }}/.kube/kubie.yaml" "${HOME}/.kube/kubie.yaml"
 
 # setup macos
 macos:
-	"{{ justfile_directory() }}/macos.sh"
+	"{{ justfile_directory() }}/macos-defaults.sh"
 
 # install amix/vimrc
 vim:

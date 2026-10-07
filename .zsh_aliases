@@ -9,10 +9,6 @@ alias -- -="cd -"
 
 alias g="git"
 alias h="history"
-# deactivated in favour of "autojump"
-#alias j="jobs"
-alias V="vagrant"
-alias VV="vagrant global-status"
 
 # Terraform
 alias tf="terraform"
