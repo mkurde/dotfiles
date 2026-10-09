@@ -31,7 +31,7 @@ export PATH="${PATH}:${HOMEBREW_PREFIX_ARM64}/opt/make/libexec/gnubin"
 export PATH="${PATH}:${HOMEBREW_PREFIX_ARM64}/opt/curl/bin"
 
 # Google Cloud SDK (prepend to prioritize gcloud tools like kubectl)
-export PATH="${HOMEBREW_PREFIX_ARM64}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin/:${PATH}"
+export PATH="${HOMEBREW_PREFIX_ARM64}/share/google-cloud-sdk/bin:${PATH}"
 
 # krew - kubectl plugin manager
 export PATH="${PATH}:${KREW_ROOT}/bin"

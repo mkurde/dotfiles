@@ -72,8 +72,8 @@ else
   fi
 
   # Google Cloud SDK completions
-  [ -f "${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ] \
-    && source "${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+  [ -f "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.zsh.inc" ] \
+    && source "${HOMEBREW_PREFIX}/share/google-cloud-sdk/completion.zsh.inc"
 
   # Starship prompt
   if command -v starship > /dev/null ; then
