@@ -139,8 +139,9 @@ mk:daily-update:run_step() {
     local step_status
     echo "${desc}" | tee -a "${log_file}"
     # Translate CR to LF: progress redraws would otherwise glue themselves onto
-    # the front of real messages and break the ^anchors in report_issues
-    "${@}" 2>&1 | tr '\r' '\n' | tee -a "${log_file}"
+    # the front of real messages and break the ^anchors in report_issues.
+    # LC_ALL=C: a UTF-8 tr stops at the first invalid byte and drops the rest
+    "${@}" 2>&1 | LC_ALL=C tr '\r' '\n' | tee -a "${log_file}"
     if [[ -n "${ZSH_VERSION}" ]]; then
         step_status=${pipestatus[1]}
     else
@@ -148,6 +149,10 @@ mk:daily-update:run_step() {
     fi
 
     if (( step_status != 0 )); then
+        # A step killed mid-line (e.g. gcloud progress bar) leaves no trailing
+        # newline, sometimes half a UTF-8 char. Start the marker on a new line
+        # so it keeps its ^anchor and stays valid text.
+        [[ -n "$(tail -c 1 "${log_file}")" ]] && echo | tee -a "${log_file}"
         # Logged in the format report_issues looks for, so a step that fails
         # silently still surfaces
         echo "Error: ${desc%%...} [${1}] exited with status ${step_status}" | tee -a "${log_file}"
@@ -178,9 +183,19 @@ mk:daily-update:run_slow() {
         # --force lets casks overwrite an app already present in the Caskroom
         # (e.g. installed/updated outside brew), which otherwise aborts the run.
         # Upgrade only outdated casks that aren't in CASK_UPGRADE_EXCLUDE.
-        local -a outdated_casks upgrade_casks
+        local -a outdated_casks upgrade_casks in_use_casks skipped_casks
         outdated_casks=(${(f)"$(brew outdated --cask --quiet 2>/dev/null)"})
         upgrade_casks=(${outdated_casks:|CASK_UPGRADE_EXCLUDE})
+        # Also skip casks with a running executable (e.g. claude, cursor-agent):
+        # the upgrade deletes the old Caskroom version under live sessions.
+        in_use_casks=(${(f)"$(lsof -d txt -Fn 2>/dev/null \
+            | sed -n "s#^n${HOMEBREW_PREFIX:-/opt/homebrew}/Caskroom/\([^/]*\)/.*#\1#p" | sort -u)"})
+        skipped_casks=(${upgrade_casks:*in_use_casks})
+        upgrade_casks=(${upgrade_casks:|in_use_casks})
+        if (( ${#skipped_casks} )); then
+            echo "Skipping in-use casks, upgrade after closing them: brew upgrade --cask ${skipped_casks[*]}" \
+                | tee -a "${log_file}"
+        fi
         if (( ${#upgrade_casks} )); then
             mk:daily-update:run_step "Upgrading Homebrew casks..." "${log_file}" \
                 brew upgrade --cask --force "${upgrade_casks[@]}" || failures=$((failures + 1))
@@ -219,9 +234,11 @@ mk:daily-update:report_issues() {
     local log_file="${1}"
     # Match only the current run (after the last "Slow updates started" marker)
     local issues
-    issues=$(awk '/=== Slow updates started/{buf=""} {buf=buf$0"\n"} END{printf "%s", buf}' "${log_file}" \
-        | grep -E '^(Error|ERROR|Warning|WARNING):' \
-        | grep -vE 'was renamed to|Hide these hints|Disable this behaviour|Treating .* as a formula|already installed' \
+    # LC_ALL=C: tool output can contain invalid UTF-8, which makes macOS awk
+    # abort ("towc: multibyte conversion failure") and hides every issue
+    issues=$(LC_ALL=C awk '/=== Slow updates started/{buf=""} {buf=buf$0"\n"} END{printf "%s", buf}' "${log_file}" \
+        | LC_ALL=C grep -E '^(Error|ERROR|Warning|WARNING):' \
+        | LC_ALL=C grep -vE 'was renamed to|Hide these hints|Disable this behaviour|Treating .* as a formula|already installed' \
         || true)
 
     if [[ -z "${issues}" ]]; then
