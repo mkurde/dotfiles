@@ -42,9 +42,6 @@ export PATH="${PATH}:${HOME}/.nix-profile/bin:/nix/var/nix/profiles/default/bin"
 # cargo bin
 export PATH="${PATH}:${HOME}/.cargo/bin"
 
-# volta bin
-export PATH="${PATH}:${HOME}/.volta/bin"
-
 # ------------------------------------------------------------------------------
 
 # Original macos zsh path - Part 1
