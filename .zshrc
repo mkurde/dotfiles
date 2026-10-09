@@ -55,7 +55,7 @@ else
   # ===============================================
 
   # oh-my-zsh setup
-  plugins=(brew copyfile copypath direnv git kubectl helm macos zsh-autosuggestions)
+  plugins=(brew copyfile copypath direnv git kubectl helm macos zsh-autosuggestions zsh-syntax-highlighting)
   fpath=($ZSH/custom/plugins/zsh-completions/src $fpath)
   source $ZSH/oh-my-zsh.sh
 
