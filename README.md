@@ -34,7 +34,9 @@ Setup steps (order):
 - `just homebrew-dep`
 - restore the `config` backup (SSH keys and `~/.ssh/config`, GnuPG, kube),
   see [Backup](#backup)
-- `just dotfiles`
+- `just dotfiles`, also checks out the submodules (oh-my-zsh, zsh plugins)
+  over HTTPS. Update them with `git submodule update --remote` and commit
+  the new pointers.
 - `just macos`
 - `just vim`
 - `just bin`
