@@ -18,7 +18,8 @@ id_ed25519*
 *.gpg
 *.asc
 .gnupg/
-.ssh/
+.ssh/*
+!.ssh/dotfiles.config
 .aws/
 .config/gcloud/
 kubeconfig
