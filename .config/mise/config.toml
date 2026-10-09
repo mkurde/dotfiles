@@ -5,11 +5,18 @@ use_versions_host = false
 use_versions_host_track = false
 idiomatic_version_file_enable_tools = ["go", "java", "node", "python", "terraform", "helm", "opentofu", "terragrunt"]
 
+[settings.github]
+# token from gh avoids the GitHub API rate limit; gh's hosts.yml lookup fails with SSH login
+gh_cli_tokens = false
+credential_command = "gh auth token"
+
 [tools]
 actionlint = "1"
+helm = "3"
 jq = "1"
 just = "1"
 kubeconform = "0"
+kustomize = "5"
 prek = "latest"
 shellcheck = "0"
 skaffold = "2"
