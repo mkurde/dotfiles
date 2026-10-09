@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
+# Usage: install-vscode-extensions [extensions.txt] [code|cursor]
 
 readonly EXTENSIONS="${1:-${PWD}/vscode/extensions.txt}"
+readonly EDITOR_CLI="${2:-code}"
 
 if [[ -f "${EXTENSIONS}" ]]; then
 	echo
-	echo "Installing vscode extensions from ${EXTENSIONS}"
+	echo "Installing ${EDITOR_CLI} extensions from ${EXTENSIONS}"
 	while read -r ext; do
-		code --install-extension "${ext}"
+		"${EDITOR_CLI}" --install-extension "${ext}"
 	done < <(cat "${EXTENSIONS}")
 	echo
 fi

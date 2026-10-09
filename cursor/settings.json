@@ -1,0 +1,297 @@
+{
+    "diffEditor.maxComputationTime": 0,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "editor.renderWhitespace": "all",
+    "editor.renderControlCharacters": false,
+    "editor.suggestSelection": "first",
+    "editor.fontFamily": "Fira Code, Menlo, Monaco, 'Courier New', monospace",
+    "editor.accessibilitySupport": "off",
+    "editor.codeActionsOnSave": {},
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": true,
+    "editor.inlineSuggest.enabled": true,
+    "explorer.openEditors.visible": 9,
+    "explorer.autoReveal": false,
+    "explorer.sortOrder": "type",
+    "files.autoSave": "onFocusChange",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.associations": {
+        "*.sls": "jinja",
+        "*.tf": "terraform",
+        "*.yaml": "helm",
+        "Makefile.*": "makefile",
+        "*.docker": "dockerfile",
+        "*.hcl": "terraform",
+        "*.json5": "jsonc",
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "workbench.colorCustomizations": {
+        "terminal.foreground": "#EFEFEF",
+        "terminal.background": "#1E1E1E",
+        "terminal.ansiBlack": "#000000",
+        "terminal.ansiBrightBlack": "#686966",
+        "terminal.ansiRed": "#c6341b",
+        "terminal.ansiBrightRed": "#e15140",
+        "terminal.ansiGreen": "#6fa430",
+        "terminal.ansiBrightGreen": "#a9e15d",
+        "terminal.ansiYellow": "#c9ae38",
+        "terminal.ansiBrightYellow": "#f9eb77",
+        "terminal.ansiBlue": "#4f78ae",
+        "terminal.ansiBrightBlue": "#8caed4",
+        "terminal.ansiMagenta": "#83668b",
+        "terminal.ansiBrightMagenta": "#b595b4",
+        "terminal.ansiCyan": "#46a4a8",
+        "terminal.ansiBrightCyan": "#73e2e6",
+        "terminal.ansiWhite": "#dbded8",
+        "terminal.ansiBrightWhite": "#f1f1ef"
+    },
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "welcomePage",
+    "workbench.settings.editor": "json",
+    "workbench.sideBar.location": "left",
+    "workbench.editor.closeEmptyGroups": false,
+    "workbench.editor.highlightModifiedTabs": true,
+    "breadcrumbs.enabled": true,
+    "shellcheck.run": "onSave",
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "git.promptToSaveFilesBeforeCommit": "always",
+    "git.autoStash": true,
+    "git.defaultCloneDirectory": "",
+    "git.confirmSync": false,
+    "git.rebaseWhenSync": true,
+    "git.ignoreRebaseWarning": true,
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": true,
+        "scminput": false
+    },
+    "github.copilot.advanced": {},
+    "gitlens.advanced.messages": {
+        "suppressIntegrationDisconnectedTooManyFailedRequestsWarning": true,
+        "suppressIntegrationRequestTimedOutWarning": true
+    },
+    "gitlens.keymap": "chorded",
+    "search.followSymlinks": false,
+    "terraform.format": {
+        "enable": false,
+        "ignoreExtensionsOnSave": [
+            ".tfsmurf"
+        ],
+        "formatOnSave": false
+    },
+    "extensions.ignoreRecommendations": true,
+    "vsicons.dontShowNewVersionMessage": true,
+    "yaml.schemas": {
+        "kubernetes": "*yaml"
+    },
+    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+    "redhat.telemetry.enabled": false,
+    "rewrap.wrappingColumn": 80,
+    "security.workspace.trust.untrustedFiles": "open",
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "[makefile]": {
+        "editor.insertSpaces": false,
+        "editor.autoIndent": "none"
+    },
+    "[helm]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+    },
+    "[markdown]": {
+        "files.trimTrailingWhitespace": false,
+        "rewrap.autoWrap.enabled": true,
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    },
+    "cSpell.enabledLanguageIds": [
+        "asciidoc",
+        "c",
+        "cpp",
+        "csharp",
+        "css",
+        "git-commit",
+        "go",
+        "handlebars",
+        "haskell",
+        "html",
+        "jade",
+        "java",
+        "javascript",
+        "javascriptreact",
+        "json",
+        "jsonc",
+        "latex",
+        "less",
+        "makefile",
+        "markdown",
+        "php",
+        "plaintext",
+        "pug",
+        "python",
+        "restructuredtext",
+        "rust",
+        "scala",
+        "scss",
+        "text",
+        "typescript",
+        "typescriptreact",
+        "yaml",
+        "yml"
+    ],
+    "cSpell.userWords": [
+        "alertmanager",
+        "alertmanagers",
+        "chartmuseum",
+        "cloudfunction",
+        "datacenter",
+        "direnv",
+        "Dominik",
+        "Grafana",
+        "helmv",
+        "istio",
+        "kubeconfigs",
+        "kubectl",
+        "kubernetes",
+        "labelmap",
+        "metafold",
+        "Oncall",
+        "Phrasesearch",
+        "Renovatebot",
+        "Rootly",
+        "Runbook",
+        "saltstack",
+        "serviceaccount",
+        "skaffold",
+        "Solr",
+        "sonarcube",
+        "stackoverflow",
+        "Stepstone",
+        "struct"
+    ],
+    "go.autocompleteUnimportedPackages": true,
+    "go.toolsManagement.autoUpdate": true,
+    "go.useLanguageServer": true,
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]"
+    ],
+    "markdown.extension.tableFormatter.normalizeIndentation": true,
+    "markdown.extension.toc.plaintext": true,
+    "markdown.extension.toc.levels": "2..6",
+    "vs-kubernetes": {
+        "vs-kubernetes.crd-code-completion": "disabled"
+    },
+    "window.commandCenter": true,
+    "terminal.integrated.shellIntegration.enabled": true,
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.rightClickBehavior": "default",
+    "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": {
+            "source": "Git Bash"
+        }
+    },
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh"
+        },
+        "fish": {
+            "path": "fish"
+        },
+        "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+        }
+    },
+    "terminal.integrated.persistentSessionScrollback": 10000,
+    "terminal.integrated.localEchoStyle": "dim",
+    "terminal.integrated.minimumContrastRatio": 1,
+    "memo.links.rules": [
+        "content/"
+    ],
+    "window.zoomLevel": 1,
+    "editor.inlineSuggest.showToolbar": "always",
+    "workbench.editor.empty.hint": "hidden",
+    "memo.links.preview.imageMaxHeight": 400,
+    "githubPullRequests.pullBranch": "never",
+    "[go]": {
+        "editor.insertSpaces": false,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "workbench.editorAssociations": {
+        "*.copilotmd": "vscode.markdown.preview.editor",
+        "*.png": "editor.excalidraw"
+    },
+    "docker.extension.enableComposeLanguageServer": false,
+    "cursor.cpp.disabledLanguages": [
+        "scminput"
+    ],
+    "cSpell.customDictionaries": {
+        "custom-dictionary-user": {
+            "name": "custom-dictionary-user",
+            "path": "~/.cspell/custom-dictionary-user.txt",
+            "addWords": true,
+            "scope": "user"
+        }
+    },
+    "cursor.windowSwitcher.sidebarHoverCollapsed": true,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "terraform.experimentalFeatures.validateOnSave": true,
+    "git.openRepositoryInParentFolders": "always",
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "cursor.composer.shouldAllowCustomModes": true,
+    "extensions.autoCheckUpdates": false,
+    "workbench.editor.enablePreview": false,
+    "workbench.colorTheme": "Default Light+",
+    "cursor.composer.usageSummaryDisplay": "always",
+    "window.autoDetectColorScheme": false,
+    "docker.extension.dockerEngineAvailabilityPrompt": false,
+    "cursor.composer.queueMessageDefaultBehavior": "steer"
+}

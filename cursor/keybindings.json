@@ -1,0 +1,16 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+      "key": "alt+cmd+s",
+      "command": "workbench.action.toggleUnifiedSidebarFromKeyboard",
+      "when": "!isAuxiliaryWindowFocusedContext"
+  },
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+        "text": "\u001b\n"
+    },
+    "when": "terminalFocus"
+  }
+]

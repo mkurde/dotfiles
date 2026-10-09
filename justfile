@@ -73,6 +73,15 @@ dotfiles:
 	ln -sfn "{{ justfile_directory() }}/k9s/config.yaml" "${HOME}/Library/Application Support/k9s/config.yaml"
 	ln -sfn "{{ justfile_directory() }}/k9s/aliases.yaml" "${HOME}/Library/Application Support/k9s/aliases.yaml"
 
+	# VS Code and Cursor user settings (mcp.json, snippets and state stay local)
+	for app in Code:vscode Cursor:cursor; do
+		dir="${HOME}/Library/Application Support/${app%%:*}/User"
+		mkdir -p "${dir}"
+		for f in settings.json keybindings.json; do
+			ln -sfn "{{ justfile_directory() }}/${app##*:}/${f}" "${dir}/${f}"
+		done
+	done
+
 # install claude code config (statusline script + settings.json entry)
 [script]
 claude:
@@ -117,9 +126,15 @@ homebrew-dep: homebrew
 homebrew-fonts: homebrew
 	brew bundle install --file "{{ justfile_directory() }}/Brewfile-fonts"
 
-# install vscode extensions
+# install VS Code and Cursor extensions
 vscode-ext:
-	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/vscode/extensions.txt"
+	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/vscode/extensions.txt" code
+	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/cursor/extensions.txt" cursor
+
+# export the installed extension lists into the repo
+vscode-ext-export:
+	code --list-extensions > "{{ justfile_directory() }}/vscode/extensions.txt"
+	cursor --list-extensions > "{{ justfile_directory() }}/cursor/extensions.txt"
 
 # install Determinate Nix and link /etc/nix/nix.custom.conf
 [script]

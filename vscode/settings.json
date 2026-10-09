@@ -29,7 +29,10 @@
     "*.yaml": "helm",
     "Makefile.*": "makefile",
     "*.docker": "dockerfile",
-    "*.json5": "jsonc"
+    "*.json5": "jsonc",
+    "**/settings.json": "jsonc", // Treat settings.json as jsonc to allow comments and trailing commas
+    "**/settings.local.json": "jsonc",
+    "~/.claude.json": "jsonc"
   },
   "files.trimTrailingWhitespace": true,
   "files.exclude": {
@@ -38,7 +41,7 @@
     "**/.settings": true,
     "**/.factorypath": true
   },
-  "workbench.colorTheme": "Default Light+",
+  "workbench.colorTheme": "Light+",
   "workbench.colorCustomizations": {
     "terminal.foreground": "#EFEFEF",
     "terminal.background": "#1E1E1E",
@@ -60,9 +63,8 @@
     "terminal.ansiBrightWhite": "#f1f1ef",
   },
   "workbench.iconTheme": "material-icon-theme",
-  "workbench.startupEditor": "welcomePage",
+  "workbench.startupEditor": "none",
   "workbench.settings.editor": "json",
-  "workbench.sideBar.location": "left",
   "workbench.editor.closeEmptyGroups": false,
   "workbench.editor.highlightModifiedTabs": true,
   "breadcrumbs.enabled": true,
@@ -77,8 +79,9 @@
   "git.rebaseWhenSync": true,
   "git.ignoreRebaseWarning": true,
   "gitlens.advanced.messages": {
+    "suppressLineUncommittedWarning": true,
     "suppressIntegrationDisconnectedTooManyFailedRequestsWarning": true,
-    "suppressIntegrationRequestTimedOutWarning": true,
+    "suppressIntegrationRequestTimedOutWarning": true
   },
   "gitlens.keymap": "chorded",
   "search.followSymlinks": false,
@@ -214,14 +217,12 @@
   "github.copilot.chat.agent.thinkingTool": true,
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "text": "Use conventional commit message format. Respect Github's guidelines for commit messages ie. Title lenght, etc). Always incluse the Jira Task URL is available. Make sure that the title is concise and the description provides necessary context."
+      "text": "Use conventional commit message format. Respect Github's guidelines for commit messages ie. Title lenght, etc). Always include the Jira Task URL is available. Make sure that the title is concise and the description provides necessary context."
     }
   ],
   "chat.mcp.autostart": "newAndOutdated",
   "chat.agent.maxRequests": 100,
   "chat.tools.terminal.autoApprove": {
-    // ========== VS Code 1.103 General Pattern Unified Version ==========
-    // === File and Directory Operations ===
     "/^(ls|pwd|cd|mkdir|find|du|df)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
@@ -237,13 +238,11 @@
       "matchCommandLine": true,
       "description": "Archive extraction operations"
     },
-    // === Git Operations (Read-only) ===
     "/^git\\s+(status|log|diff|branch|show|config\\s+list|remote)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
       "description": "Safe Git read operations"
     },
-    // === Package Management (Information Only) ===
     "/^(npm|yarn)\\s+(list|run\\s+(test|lint|build|dev))(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
@@ -254,7 +253,6 @@
       "matchCommandLine": true,
       "description": "Python package info"
     },
-    // === Go Development ===
     "/^go\\s+(test|build|fmt|mod|run)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
@@ -265,19 +263,16 @@
       "matchCommandLine": true,
       "description": "Go format command"
     },
-    // === Docker (Read-only) ===
     "/^docker(-compose)?\\s+(ps|images|logs)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
       "description": "Docker status operations"
     },
-    // === System Information ===
     "/^(whoami|date|echo|printf|env|ps|top|netstat|lsof|which|whereis)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
       "description": "System information commands"
     },
-    // === Cloud CLI (Read-only) ===
     "/^aws\\s+(sts\\s+get-caller-identity|s3\\s+ls)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
@@ -308,7 +303,6 @@
       "matchCommandLine": true,
       "description": "Kubernetes resource usage"
     },
-    // === GitHub CLI (Read-only) ===
     "/^gh\\s+(pr|issue)\\s+(list|view|show|diff)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
@@ -319,19 +313,16 @@
       "matchCommandLine": true,
       "description": "Sleep + ADB command combinations"
     },
-    // === Gradle ===
     "/^\\.\\/gradlew\\s+(clean|build|test|assemble.*|install.*|lint)(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
       "description": "Gradle build commands"
     },
-    // === Make ===
     "/^make(\\s.*)?$/i": {
       "approve": true,
       "matchCommandLine": true,
       "description": "Make build commands"
     },
-    // === Terraform (Read-only) ===
     "/^terraform\\s+(plan|show|state\\s+list|state\\s+show|output|version|validate|fmt)\\s*/i": {
       "approve": true,
       "matchCommandLine": true,
@@ -342,14 +333,11 @@
       "matchCommandLine": true,
       "description": "Terraform init without backend changes"
     },
-    // === Sleep Commands ===
     "/^sleep\\s+[0-9]+$/i": {
       "approve": true,
       "matchCommandLine": true,
       "description": "Sleep command"
     },
-    // ========== Deny List ==========
-    // Explicitly deny dangerous commands
     "/^(rm|rmdir|sudo|su|kill|killall|pkill)\\s+/i": {
       "approve": false,
       "matchCommandLine": true,
@@ -389,6 +377,61 @@
       "approve": false,
       "matchCommandLine": true,
       "description": "Dangerous permission changes"
+    },
+    "just build accommodation-api 2>&1 | tail -50": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "just build accommodation-api": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "/^gh pr status$/": {
+      "approve": true,
+      "matchCommandLine": true
     }
-  }
+  },
+  "chat.mcp.serverSampling": {
+    "GitKraken (bundled with GitLens): GitKraken (bundled with GitLens)": {
+      "allowedModels": [
+        "copilot/claude-sonnet-4",
+        "copilot/gemini-2.5-pro",
+        "copilot/gpt-5"
+      ]
+    }
+  },
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "gitlens.gitkraken.mcp.autoEnabled": false,
+  "markdown.occurrencesHighlight.enabled": true,
+  "markdown-checkboxes.label": true,
+  "github.copilot.chat.anthropic.contextEditing.enabled": true,
+  "github.copilot.chat.copilotMemory.enabled": true,
+  "github.copilot.chat.githubMcpServer.enabled": true,
+  "github.copilot.chat.githubMcpServer.readonly": true,
+  "chat.viewSessions.orientation": "stacked",
+  "chat.planAgent.defaultModel": "Claude Sonnet 4.6 (claude-code)",
+  "claudeCode.preferredLocation": "sidebar",
+  "security.promptForLocalFileProtocolHandling": false,
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ],
+  "git.openRepositoryInParentFolders": "always"
 }
