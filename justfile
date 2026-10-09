@@ -17,7 +17,7 @@ bin:
 	while IFS= read -r file; do
 		f="$(basename "$file")"
 		sudo ln -sf "$file" "/usr/local/bin/$f"
-	done< <(find "{{ justfile_directory() }}/bin" -type f -not -name "meldDiff" -not -name ".*.swp" -not -name "vgaswitcheroo.sh")
+	done< <(find "{{ justfile_directory() }}/bin" -type f -not -name "meldDiff" -not -name ".*.swp")
 
 # install the dotfiles for current user
 [script]
