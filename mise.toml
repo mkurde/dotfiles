@@ -1,0 +1,13 @@
+[settings]
+experimental = true # needed for hooks
+
+[tools]
+just = "1"
+shellcheck = "0"
+prek = "latest"
+
+[tool_alias]
+pre-commit = "prek"
+
+[hooks]
+postinstall = "prek install"
