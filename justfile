@@ -9,7 +9,7 @@ _default:
 	@just --list
 
 # Installs everything
-all: bin dotfiles macos vim homebrew-dep
+all: bin dotfiles macos vim homebrew-dep nix
 
 # install bin directory files
 [script]
@@ -60,9 +60,18 @@ dotfiles:
 	ln -sfn "{{ justfile_directory() }}/.config/resticprofile/profiles.yaml" "${HOME}/.config/resticprofile/profiles.yaml"
 	ln -sfn "{{ justfile_directory() }}/.config/resticprofile/excludes.txt" "${HOME}/.config/resticprofile/excludes.txt"
 
+	# ~/.ssh/config stays local (OrbStack and gcloud write to it) and includes this file
+	mkdir -p "${HOME}/.ssh" && chmod 700 "${HOME}/.ssh"
+	ln -sfn "{{ justfile_directory() }}/.ssh/dotfiles.config" "${HOME}/.ssh/dotfiles.config"
+
 	# special handling for kubie config
 	mkdir -p "${HOME}/.kube"
 	ln -sfn "{{ justfile_directory() }}/.kube/kubie.yaml" "${HOME}/.kube/kubie.yaml"
+
+	# k9s reads Application Support on macOS unless XDG_CONFIG_HOME is set
+	mkdir -p "${HOME}/Library/Application Support/k9s"
+	ln -sfn "{{ justfile_directory() }}/k9s/config.yaml" "${HOME}/Library/Application Support/k9s/config.yaml"
+	ln -sfn "{{ justfile_directory() }}/k9s/aliases.yaml" "${HOME}/Library/Application Support/k9s/aliases.yaml"
 
 # setup macos
 macos:
@@ -92,6 +101,15 @@ homebrew-fonts: homebrew
 vscode-ext:
 	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/vscode/extensions.txt"
 
+# install Determinate Nix and link /etc/nix/nix.custom.conf
+[script]
+nix:
+	if [ ! -x /nix/var/nix/profiles/default/bin/nix ]; then
+		curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+	fi
+	sudo ln -sfn "{{ justfile_directory() }}/nix/nix.custom.conf" /etc/nix/nix.custom.conf
+	sudo launchctl kickstart -k system/systems.determinate.nix-daemon
+
 # set up kubectl plugins and completions
 kubectl-setup:
 	"{{ justfile_directory() }}/kubectl-setup.sh"
@@ -102,4 +120,4 @@ test: shellcheck
 # Runs the shellcheck tests on the scripts.
 [script]
 shellcheck:
-	pre-commit run --all-files shellcheck
+	prek run --all-files shellcheck
