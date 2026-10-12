@@ -105,6 +105,7 @@ claude:
 # setup macos
 macos:
 	"{{ justfile_directory() }}/macos-defaults.sh"
+	duti "{{ justfile_directory() }}/duti"
 
 # install amix/vimrc
 vim:

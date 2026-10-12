@@ -1,0 +1,3 @@
+# Default apps per type, applied by `just macos` (duti <file>).
+# Format: <bundle id> <UTI or .ext> <role>; check with `duti -d <UTI>`.
+com.microsoft.VSCode	net.daringfireball.markdown	all

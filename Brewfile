@@ -19,6 +19,7 @@ brew "curl"
 brew "diff-so-fancy"
 brew "direnv"
 brew "doctl"
+brew "duti"
 # brew "emacs" # not used
 brew "eza"
 brew "fd"
