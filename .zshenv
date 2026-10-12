@@ -66,7 +66,11 @@ export MANPAGER='less -X';
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # setup java properly. Thanks, Steve!
-export JAVA_HOME="$(/usr/libexec/java_home)";
+# java_home fails and prints to stderr when no JDK is installed.
+if _java_home="$(/usr/libexec/java_home 2>/dev/null)"; then
+  export JAVA_HOME="${_java_home}"
+fi
+unset _java_home
 
 # Golang $GOPATH.
 export GOPATH="${HOME}/workspace"
