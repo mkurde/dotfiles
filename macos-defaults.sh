@@ -60,8 +60,10 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # Set language and text formats
-defaults write NSGlobalDomain AppleLanguages -array "en" "de"
-defaults write NSGlobalDomain AppleLocale -string "de_DE@currency=EUR"
+# en_US with German region formats (rg=dezzzz). iTerm builds LANG from
+# language + region; "en" + "de_DE" gives en_DE.UTF-8, which macOS lacks.
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "de-DE"
+defaults write NSGlobalDomain AppleLocale -string "en_US@rg=dezzzz"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 
@@ -75,7 +77,15 @@ defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
 # Disable transparency in the menu bar and elsewhere.
-defaults write com.apple.universalaccess reduceTransparency -bool true
+# universalaccess and Safari prefs are TCC-protected: the terminal needs
+# Full Disk Access (System Settings > Privacy & Security), or writes fail.
+if ls ~/Library/Containers/com.apple.Safari/Data/Library/Preferences >/dev/null 2>&1; then
+  has_fda=1
+else
+  has_fda=0
+  echo "Skipping universalaccess and Safari defaults: grant this terminal Full Disk Access and re-run."
+fi
+[ "$has_fda" = 1 ] && defaults write com.apple.universalaccess reduceTransparency -bool true
 
 ## NSGlobalDomain NS*
 
@@ -226,6 +236,7 @@ sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutio
 
 ## Safari
 
+if [ "$has_fda" = 1 ]; then
 # Privacy: don’t send search queries to Apple.
 defaults write com.apple.Safari UniversalSearchEnabled -bool false
 defaults write com.apple.Safari SuppressSearchSuggestions -bool true
@@ -243,6 +254,7 @@ defaults write com.apple.Safari AutoFillFromAddressBook -bool false
 defaults write com.apple.Safari AutoFillPasswords -bool false
 defaults write com.apple.Safari AutoFillCreditCardData -bool false
 defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
+fi
 
 ## Network Browser
 
@@ -308,8 +320,9 @@ sudo chflags nohidden /Volumes
 # Show host info e.g. IP address, hostname, OS version, etc. when you click the clock
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
-# Set the timezone; see `sudo systemsetup -listtimezones` for other values
-sudo systemsetup -settimezone "Europe/Berlin" > /dev/null
+# Set the timezone; see `sudo systemsetup -listtimezones` for other values.
+# systemsetup prints a harmless "Error:-99" without Full Disk Access.
+sudo systemsetup -settimezone "Europe/Berlin" > /dev/null 2>&1
 
 # Stop iTunes from responding to the keyboard media keys
 launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
@@ -322,20 +335,15 @@ sudo pmset -a lidwake 1
 # Restart automatically on power loss
 sudo pmset -a autorestart 1
 
-# Sleep the display after 15 minutes
-sudo pmset -a displaysleep 15
+# Disable machine sleep while charging; sleep the display after 15 minutes
+sudo pmset -c sleep 0 displaysleep 15
 
-# Disable machine sleep while charging
-sudo pmset -c sleep 0
-
-# Set machine sleep to 5 minutes on battery
-sudo pmset -b sleep 5
+# On battery, sleep the display after 3 and the machine after 5 minutes.
+# Display sleep must be shorter than system sleep, or pmset warns.
+sudo pmset -b displaysleep 3 sleep 5
 
 # Set standby delay to 24 hours (default is 1 hour)
 sudo pmset -a standbydelay 86400
-
-# Never go into computer sleep mode
-sudo systemsetup -setcomputersleep Off > /dev/null
 
 # Hibernation mode 3: copy RAM to disk so the system state survives a power failure.
 # Mode 3 needs /private/var/vm/sleepimage, so don't replace it with a locked zero-byte file.
