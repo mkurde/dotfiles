@@ -3,9 +3,8 @@
 # Daily tooling update system
 # Runs once per day on first shell open to keep important CLI tools up-to-date
 
-# Tool configuration - edit these arrays to add/remove tools
-FAST_UPDATE_TOOLS=(bin kubent metafold skaffold)
-SLOW_UPDATE_TOOLS=(brew gcloud)
+# Tools updated each day; mise covers its global config (.config/mise/config.toml)
+SLOW_UPDATE_TOOLS=(brew gcloud mise)
 
 # Casks to skip during `brew upgrade --cask` (they self-update and would fail
 # the run if open, e.g. VS Code holding an app lock).
@@ -41,77 +40,14 @@ mk:daily-update:should_run() {
     return 1
 }
 
-# Update lock file with current date
-mk:daily-update:lock_file() {
+# Atomically claim today's run. Shells opened in the same second (iTerm
+# restoring tabs after login) all pass should_run before any writes the date
+# file; mkdir succeeds for exactly one of them.
+mk:daily-update:claim_today() {
+    mkdir "${DAILY_UPDATE_LOCK_DIR}/run-${current_date}" 2>/dev/null || return 1
+    find "${DAILY_UPDATE_LOCK_DIR}" -maxdepth 1 -type d -name 'run-*' \
+        ! -name "run-${current_date}" -exec rmdir {} + 2>/dev/null
     echo "${current_date}" > "${DAILY_UPDATE_LOCK_FILE}"
-}
-
-# Tool update functions
-mk:daily-update:bin_tool() {
-    local tool="${1}"
-    if ! command -v gh &>/dev/null || ! command -v "${HOME}/bin/bin" &>/dev/null; then
-        echo "Skipping ${tool} (gh or bin not available)"
-        return 1
-    fi
-
-    local github_token
-    github_token=$(gh auth token 2>/dev/null)
-    if [[ -z "${github_token}" ]]; then
-        echo "Skipping ${tool} (no GitHub token)"
-        return 1
-    fi
-
-    echo "Updating ${tool}..."
-    if GITHUB_AUTH_TOKEN="${github_token}" "${HOME}/bin/bin" update "${tool}" -y 2>/dev/null; then
-        echo "${tool} updated"
-        return 0
-    else
-        echo "${tool} up to date"
-        return 1
-    fi
-}
-
-mk:daily-update:simple_tool() {
-    local tool="${1}"
-    local cmd="${2}"
-
-    if ! command -v "${tool}" &>/dev/null; then
-        echo "Skipping ${tool} (not available)"
-        return 1
-    fi
-
-    echo "Updating ${tool}..."
-    if eval "${cmd}" 2>/dev/null; then
-        echo "${tool} updated"
-        return 0
-    else
-        echo "${tool} up to date"
-        return 1
-    fi
-}
-
-# Fast updates (tools that update quickly)
-mk:daily-update:run_fast() {
-    local has_updates=false
-
-    echo "Daily tooling updates ($(date '+%H:%M:%S'))"
-    echo "----------------------------------------"
-
-    # Update bin-managed tools
-    for tool in "${FAST_UPDATE_TOOLS[@]}"; do
-        if mk:daily-update:bin_tool "${tool}"; then
-            has_updates=true
-        fi
-    done
-
-    # Summary
-    echo "----------------------------------------"
-    if [[ "${has_updates}" == "true" ]]; then
-        echo "Updates completed at $(date '+%H:%M:%S')"
-    else
-        echo "All tools up to date"
-    fi
-    echo
 }
 
 # Slow updates (brew, gcloud, etc.) - runs in foreground
@@ -209,6 +145,16 @@ mk:daily-update:run_slow() {
         echo "Skipping Homebrew (not available)" | tee -a "${log_file}"
     fi
 
+    # mise global tools, within their version pins. Runs from $HOME so a
+    # project mise.toml in the current directory is not upgraded too.
+    if command -v mise &>/dev/null; then
+        mk:daily-update:run_step "Upgrading mise tools..." "${log_file}" \
+            mise -C "${HOME}" upgrade --yes || failures=$((failures + 1))
+        has_updates=true
+    else
+        echo "Skipping mise (not available)" | tee -a "${log_file}"
+    fi
+
     # Google Cloud SDK updates
     if command -v gcloud &>/dev/null; then
         mk:daily-update:run_step "Updating Google Cloud SDK..." "${log_file}" \
@@ -281,13 +227,11 @@ mk:daily-update:run() {
         return 0
     fi
 
-    # Create lock file immediately to prevent race conditions
-    mk:daily-update:lock_file
+    if ! mk:daily-update:claim_today; then
+        return 0
+    fi
 
-    # Run fast updates
-    mk:daily-update:run_fast
-
-    # Run slow updates (brew, gcloud) in foreground
+    # Run updates (brew, mise, gcloud) in foreground
     mk:daily-update:run_slow
 
     # Show available commands
@@ -310,6 +254,7 @@ mk:daily-update:show_log() {
 # Helper function to force run updates (for testing)
 mk:daily-update:force() {
     rm -f "${DAILY_UPDATE_LOCK_FILE}"
+    rmdir "${DAILY_UPDATE_LOCK_DIR}/run-${current_date}" 2>/dev/null
     mk:daily-update:run
 }
 

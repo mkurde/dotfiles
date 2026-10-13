@@ -27,3 +27,16 @@ oh-my-zsh and `.zsh-custom` plugins are vendored; change them only when
 the behaviour cannot live in those local files.
 
 `just dotfiles` is how files get linked into `$HOME`.
+
+## No employer specifics
+
+This repo is public and personal. Keep employer specifics out of it:
+org names, internal repos and tools, hostnames, clusters, ticket IDs.
+That covers code, comments, CHANGELOG and commit messages. Check with
+`git diff --cached | grep -i <employer>` before committing.
+
+Employer config lives in the private work repo and gets linked into a
+drop-in directory that this repo already loads. Example: work tools
+for mise go in `~/.config/mise/conf.d/*.toml`, not in
+`.config/mise/config.toml`. If no drop-in point exists, add a generic
+one (e.g. source `~/.zshrc.local` if present) rather than the specific.

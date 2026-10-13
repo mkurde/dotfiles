@@ -5,6 +5,33 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-10-13: daily updates claim the day with `mkdir`
+
+### Context
+
+After the Mac migration, iTerm restored four tabs in the same second.
+All four shells passed the date check before any of them wrote
+`last-update-date`, so four brew runs shared one cache. The results
+were signature mismatches, half-downloaded DMGs, Cellar locks and a
+broken BetterTouchTool rollback.
+
+- **Decision:** `mkdir run-<date>` in the lock dir claims the day. The
+  date file stays for `daily-updates-status`.
+- **Why:** `mkdir` is atomic, so exactly one shell wins. A date in the
+  directory name means a shell killed mid-run cannot block later days,
+  so there is no stale-PID handling.
+
+### mise instead of `bin` for CLI tools
+
+- **Decision:** kubent is in the global mise config (skaffold already
+  was). Work tools go in `~/.config/mise/conf.d/`, linked from a private
+  work repo. The daily run calls `mise -C ~ upgrade` as a logged step.
+  `bin` and its fast-update loop are gone.
+- **Why:** `bin` was not installed on the new Mac and needed its own
+  token handling. mise already gets a token from `gh auth token` for
+  private repos, and the upgrade stays inside the version pins.
+  `-C ~` keeps the current project's `mise.toml` out of the upgrade.
+
 ## 2026-10-08: tooling updates skip in-use casks, log parsed as bytes
 
 ### Context
