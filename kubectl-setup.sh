@@ -10,6 +10,12 @@ if ! command -v git > /dev/null; then
   exit 1
 fi
 
+# GKE credential plugin is a gcloud component, not a brew or mise package
+# https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin
+if command -v gcloud > /dev/null; then
+  gcloud components install gke-gcloud-auth-plugin --quiet
+fi
+
 (
   set -x; cd "$(mktemp -d)" &&
   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
@@ -21,4 +27,4 @@ fi
 )
 
 "${HOME}/.krew/bin/kubectl-krew" install \
- doctor get-all krew outdated preflight restart sniff tail
+ get-all krew outdated preflight restart sniff tail
