@@ -59,6 +59,8 @@ brew "nushell"
 brew "pinentry-mac"
 brew "popeye"
 brew "prips"
+# gcloud virtenv base; listed so `brew autoremove` keeps it
+brew "python@3.14"
 brew "rancher-cli"
 brew "redpanda-data/tap/redpanda"
 brew "restic"
