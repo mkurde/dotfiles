@@ -1,5 +1,3 @@
-tap "homebrew/bundle"
-tap "homebrew/services"
 # Trusted taps (brew trust). Not in homebrew-core:
 tap "nklmilojevic/sofka"
 tap "my-monkeys/tap"
@@ -101,7 +99,7 @@ cask "dash"
 cask "firefox"
 cask "firefox@developer-edition"
 cask "gcloud-cli"
-# cask "google-chrome"
+# cask "google-chrome" # installed by company tooling, not via Homebrew
 cask "gimp"
 cask "istat-menus"
 cask "iterm2"
@@ -111,7 +109,8 @@ cask "lens"
 # cask "logitech-options" # not needed, MX Vertical works without a driver
 cask "mykso/tap/myks"
 cask "ngrok"
-# cask "opensuperwhisper" # unmaintained (starmel/OpenSuperWhisper), use my-monkeys/tap instead
+# cask "opensuperwhisper" # original dev (starmel/OpenSuperWhisper),
+#   fork my-monkeys/tap added more value
 cask "my-monkeys/tap/opensuperwhisper"
 cask "opera-gx"
 cask "orbstack"
@@ -121,7 +120,7 @@ cask "sequel-ace"
 cask "skills-manager"
 cask "spotify"
 cask "spotmenu"
-# cask "tailscale-app"
+# cask "tailscale-app" # installed by company tooling, not via Homebrew
 # cask "teamviewer"
 # cask "teamviewer-quickjoin"
 # cask "teamviewer-quicksupport"
