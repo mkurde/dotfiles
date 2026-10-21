@@ -1,4 +1,5 @@
-# Trusted taps (brew trust). Not in homebrew-core:
+# Third-party taps, not in homebrew-core. The formulae and casks from
+# these taps are `trusted: true` so `brew bundle` can load them.
 tap "nklmilojevic/sofka"
 tap "my-monkeys/tap"
 tap "mykso/tap"
@@ -51,7 +52,7 @@ brew "make"
 brew "mas"
 brew "mise"
 brew "moreutils"
-brew "nats-io/nats-tools/nats"
+brew "nats-io/nats-tools/nats", trusted: true
 brew "ngrep"
 brew "nushell"
 brew "pinentry-mac"
@@ -60,13 +61,13 @@ brew "prips"
 # gcloud virtenv base; listed so `brew autoremove` keeps it
 brew "python@3.14"
 brew "rancher-cli"
-brew "redpanda-data/tap/redpanda"
+brew "redpanda-data/tap/redpanda", trusted: true
 brew "restic"
 brew "resticprofile"
 brew "ripgrep"
 brew "rust"
 brew "skopeo"
-brew "nklmilojevic/sofka/sofka"
+brew "nklmilojevic/sofka/sofka", trusted: true
 brew "starship"
 brew "stern"
 brew "telnet"
@@ -100,21 +101,21 @@ cask "firefox"
 cask "firefox@developer-edition"
 cask "gcloud-cli"
 # cask "google-chrome" # installed by company tooling, not via Homebrew
-cask "gimp"
+# cask "gimp"
 cask "istat-menus"
 cask "iterm2"
 # cask "joplin"
 cask "lens"
 # cask "logitech-camera-settings" # replaced with cameracontroller
 # cask "logitech-options" # not needed, MX Vertical works without a driver
-cask "mykso/tap/myks"
+cask "mykso/tap/myks", trusted: true
 cask "ngrok"
 # cask "opensuperwhisper" # original dev (starmel/OpenSuperWhisper),
 #   fork my-monkeys/tap added more value
-cask "my-monkeys/tap/opensuperwhisper"
+cask "my-monkeys/tap/opensuperwhisper", trusted: true
 cask "opera-gx"
 cask "orbstack"
-cask "stablyai/orca/orca"
+cask "stablyai/orca/orca", trusted: true
 cask "rectangle"
 cask "sequel-ace"
 cask "skills-manager"

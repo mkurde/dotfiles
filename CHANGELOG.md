@@ -5,6 +5,25 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-10-20: Brewfile trusts third-party formulae
+
+### Context
+
+`just homebrew-dep` on a fresh Mac stopped and asked for
+`brew trust` on sofka, redpanda and nats. Homebrew 6 (June 2026)
+refuses to load a non-official tap until that formula or cask is
+trusted. An existing Mac already had them installed, so the prompt
+never showed up there.
+
+### `trusted: true` on the six tap packages
+
+- **Decision:** Mark nats, redpanda, sofka, myks, opensuperwhisper
+  and orca `trusted: true`. Leave the taps themselves untrusted.
+- **Why:** `brew bundle` records that trust before it installs, so a
+  fresh run does not stop. Item trust is enough; the rest of each tap
+  stays unloaded. `brew bundle cleanup` also resets the trust store to
+  whatever the Brewfile declares, so the marks have to live here.
+
 ## 2026-10-13: daily updates claim the day with `mkdir`
 
 ### Context
