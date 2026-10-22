@@ -1,4 +1,7 @@
 [settings]
+trusted_config_paths = [
+    "/Users/mkurde/workspace"
+]
 auto_install = true
 activate_aggressive = true
 use_versions_host = false
