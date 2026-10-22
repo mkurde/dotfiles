@@ -102,8 +102,14 @@ claude:
 		echo "skipping claude statusLine: ${claude_settings} is not a valid JSON object" >&2
 	fi
 
+# enable Touch ID for sudo (survives OS updates via sudo_local)
+[script]
+pam:
+	sudo install -m 444 -o root -g wheel \
+		"{{ justfile_directory() }}/pam.d/sudo_local" /etc/pam.d/sudo_local
+
 # setup macos
-macos:
+macos: pam
 	"{{ justfile_directory() }}/macos-defaults.sh"
 	duti "{{ justfile_directory() }}/duti"
 

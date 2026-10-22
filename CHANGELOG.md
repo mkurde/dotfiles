@@ -5,6 +5,21 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-10-22: Touch ID for sudo via `sudo_local`
+
+### Context
+
+`pam.d/sudo` patched `/etc/pam.d/sudo` with `pam_tid.so`. That file is
+reset by macOS updates. Sequoia already `include`s `sudo_local` for
+local overrides.
+
+### Ship `sudo_local`, not `sudo`
+
+- **Decision:** Track `pam.d/sudo_local` (only the `pam_tid` line) and
+  install it with `just pam`, which `just macos` runs first.
+- **Why:** Matches Apple's template path, survives updates, and leaves
+  the system `sudo` PAM stack alone.
+
 ## 2026-10-20: Brewfile trusts third-party formulae
 
 ### Context

@@ -37,7 +37,7 @@ Setup steps (order):
 - `just dotfiles`, also checks out the submodules (oh-my-zsh, zsh plugins)
   over HTTPS. Update them with `git submodule update --remote` and commit
   the new pointers.
-- `just macos`
+- `just macos` (also enables Touch ID for sudo via `just pam`)
 - `just vim`
 - `just bin`
 - `just nix`, see [Nix](#nix)
