@@ -29,6 +29,9 @@ Session.vim
 !.gitignore
 *~
 
+# git worktrees
+.worktrees/
+
 # direnv config
 .envrc
 
