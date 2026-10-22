@@ -293,5 +293,7 @@
     "cursor.composer.usageSummaryDisplay": "always",
     "window.autoDetectColorScheme": false,
     "docker.extension.dockerEngineAvailabilityPrompt": false,
-    "cursor.composer.queueMessageDefaultBehavior": "steer"
+    "cursor.composer.queueMessageDefaultBehavior": "steer",
+    "application.shellEnvironmentResolutionTimeout": 20,
+    "cursor.composer.codeBlockWordWrap": true
 }
