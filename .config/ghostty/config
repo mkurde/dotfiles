@@ -1,4 +1,4 @@
-background = #1A1A1A
+background = #000000
 background-blur = 20
 background-opacity = 0.90
 background-opacity-cells = true
@@ -58,4 +58,4 @@ window-padding-balance = true
 window-padding-x = 5
 window-padding-y = 8
 
-working-directory = workspace/src
+working-directory = ~/workspace/src
