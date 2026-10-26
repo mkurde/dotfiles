@@ -8,6 +8,8 @@ copy-on-select = clipboard
 cursor-style = block
 cursor-style-blink = false
 
+focus-follows-mouse = true
+
 font-family = FiraCode Nerd Font Mono
 font-family = JetBrainsMono Nerd Font Mono
 font-feature = +calt, +liga, +dlig
