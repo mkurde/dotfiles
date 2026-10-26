@@ -1,5 +1,6 @@
 # Third-party taps, not in homebrew-core. The formulae and casks from
 # these taps are `trusted: true` so `brew bundle` can load them.
+tap "can1357/tap"
 tap "nklmilojevic/sofka"
 tap "my-monkeys/tap"
 tap "mykso/tap"
@@ -55,6 +56,7 @@ brew "moreutils"
 brew "nats-io/nats-tools/nats", trusted: true
 brew "ngrep"
 brew "nushell"
+brew "can1357/tap/omp", trusted: true
 brew "pinentry-mac"
 brew "popeye"
 brew "prips"
