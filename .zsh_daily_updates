@@ -184,7 +184,7 @@ mk:daily-update:report_issues() {
     # abort ("towc: multibyte conversion failure") and hides every issue
     issues=$(LC_ALL=C awk '/=== Slow updates started/{buf=""} {buf=buf$0"\n"} END{printf "%s", buf}' "${log_file}" \
         | LC_ALL=C grep -E '^(Error|ERROR|Warning|WARNING):' \
-        | LC_ALL=C grep -vE 'was renamed to|Hide these hints|Disable this behaviour|Treating .* as a formula|already installed' \
+        | LC_ALL=C grep -vE 'was renamed to|Hide these hints|Disable this behaviour|Treating .* as a formula|already installed|Skipping quitting application|couldn.t inherit .* quarantine approval' \
         || true)
 
     if [[ -z "${issues}" ]]; then
