@@ -59,7 +59,7 @@ export LANG='en_US.UTF-8';
 export LC_LANG='en_US.UTF-8';
 
 # Highlight section titles in man pages
-export LESS_TERMCAP_md="${yellow}";
+export LESS_TERMCAP_md="${yellow:-}";
 
 # Don't clear screen after quitting man page
 export MANPAGER='less -X';
