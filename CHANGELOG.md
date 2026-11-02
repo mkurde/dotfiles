@@ -5,6 +5,29 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-02: git identity in `~/.gitconfig.local`
+
+### Context
+
+`dotgit/dotgitconfig` hardcoded the work email and GPG signing key.
+On the private Mac that key does not exist, so every signed commit
+failed, and the work email does not belong in this repo.
+
+### Include a per-machine file
+
+- **Decision:** Keep only `user.name` in the tracked config. Include
+  `~/.gitconfig.local` at the end for `user.email`, `user.signingkey`
+  and `gpg.format`. The work Mac gets its file from the work repo.
+- **Why:** One repo, two identities, no employer details. The include
+  is last so the local file wins.
+
+### SSH signing on the private Mac
+
+- **Decision:** `gpg.format = ssh` with the GitHub SSH key as signing
+  key, registered on GitHub as a signing key.
+- **Why:** The key is already in the Keychain; no GnuPG keyring,
+  agent or pinentry to carry around.
+
 ## 2026-10-29: gcloud runs on mise Python
 
 ### Context

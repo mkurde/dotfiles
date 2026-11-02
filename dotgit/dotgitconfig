@@ -195,10 +195,13 @@
 
 [user]
   name = Markus Kurde
-  email = markus.kurde@trivago.com
-	signingkey = 3F5FA90CE4EF74A6
+  # email and signingkey live in ~/.gitconfig.local (per machine)
 
 [gpg]
   program = gpg
 [init]
 	defaultBranch = main
+
+# Per-machine identity and signing. Last, so it overrides the above.
+[include]
+  path = ~/.gitconfig.local

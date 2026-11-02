@@ -37,6 +37,7 @@ Setup steps (order):
 - `just dotfiles`, also checks out the submodules (oh-my-zsh, zsh plugins)
   over HTTPS. Update them with `git submodule update --remote` and commit
   the new pointers.
+- create `~/.gitconfig.local`, see [git identity and signing](#git-identity-and-signing)
 - `just macos` (also enables Touch ID for sudo via `just pam`)
 - `just vim`
 - `just bin`
@@ -78,6 +79,33 @@ Include ~/.ssh/dotfiles.config
 `.ssh/dotfiles.config` (linked by `just dotfiles`) holds only the shared
 `Host *` defaults. Host entries and `IdentityFile` lines stay in the local
 file, because this repo is public.
+
+## git identity and signing
+
+`dotgit/dotgitconfig` sets only `user.name` and `commit.gpgsign = true`.
+Email and signing key go in a local `~/.gitconfig.local`, included last.
+Without it, every commit fails.
+
+SSH signing (no GnuPG needed):
+
+```ini
+[user]
+  email = you@example.com
+  signingkey = ~/.ssh/id_ed25519.pub
+[gpg]
+  format = ssh
+```
+
+GitHub lists **authentication** and **signing** keys separately. A key that
+works for `git push` is not a signing key yet; add it again:
+
+```bash
+gh auth refresh -h github.com -s admin:ssh_signing_key,user
+gh ssh-key add ~/.ssh/id_ed25519.pub --type signing --title "$(hostname -s)"
+gh ssh-key list   # last column: authentication / signing
+```
+
+The default `gh` login lacks those scopes, so the calls fail with HTTP 404.
 
 ## Backup
 

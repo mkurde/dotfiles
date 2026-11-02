@@ -14,6 +14,7 @@ all: bin dotfiles macos vim homebrew-dep nix
 # install bin directory files
 [script]
 bin:
+	sudo mkdir -p /usr/local/bin
 	while IFS= read -r file; do
 		f="$(basename "$file")"
 		sudo ln -sf "$file" "/usr/local/bin/$f"
