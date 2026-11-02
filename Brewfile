@@ -101,6 +101,7 @@ cask "dash"
 cask "firefox"
 cask "firefox@developer-edition"
 cask "gcloud-cli"
+cask "ghostty"
 # cask "google-chrome" # installed by company tooling, not via Homebrew
 # cask "gimp"
 cask "istat-menus"
