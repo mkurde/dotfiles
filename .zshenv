@@ -87,6 +87,11 @@ export GPG_TTY="$(tty)"
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
 # Google Cloud
+# gcloud: brew python@3.14 links openssl@4 (no ssl.PROTOCOL_TLSv1); mise
+# python bundles OpenSSL 3. See CHANGELOG 2026-10-29.
+if [[ -x "${HOME}/.local/share/mise/installs/python/3.12/bin/python3" ]]; then
+  export CLOUDSDK_PYTHON="${HOME}/.local/share/mise/installs/python/3.12/bin/python3"
+fi
 #export GOOGLE_APPLICATION_CREDENTIALS=$HOME/.config/gcloud/application_default_credentials.json
 
 # https://krew.sigs.k8s.io/docs/user-guide/advanced-configuration/
