@@ -5,6 +5,24 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-10-29: gcloud runs on mise Python
+
+### Context
+
+The gcloud cask depends on Homebrew `python@3.14` and builds its
+virtualenv on it. A brew upgrade relinked that Python against
+`openssl@4`, which has no `ssl.PROTOCOL_TLSv1`. gcloud's vendored
+urllib3 still uses it, so `gcloud storage` crashed on import.
+
+### `CLOUDSDK_PYTHON` in `.zshenv`
+
+- **Decision:** Point `CLOUDSDK_PYTHON` at the mise `python/3.12`
+  symlink and delete the gcloud virtualenv
+  (`gcloud config virtualenv delete`).
+- **Why:** mise Python bundles its own OpenSSL 3, so brew Python or
+  OpenSSL bumps no longer change gcloud's runtime. The `3.12` symlink
+  survives patch upgrades. Drop this once gcloud supports OpenSSL 4.
+
 ## 2026-10-22: Touch ID for sudo via `sudo_local`
 
 ### Context
