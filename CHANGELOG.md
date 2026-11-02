@@ -5,6 +5,27 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-02: Nix cache for Emanote moves to nixos.asia
+
+### Context
+
+`cache.garnix.io` stopped resolving (NXDOMAIN on every resolver), so
+every Nix call retried it five times. Emanote upstream switched its
+`nixConfig` to `cache.nixos.asia/oss`. nixpkgs dropped `emanote`, so
+`cache.nixos.org` has no prebuilt copy.
+
+### Swap the substituter in `nix/nix.custom.conf`
+
+- **Decision:** Replace garnix with `https://cache.nixos.asia/oss`
+  and its `oss:` key. Bump the emanote input in repos that use it.
+- **Why:** It is the cache Emanote upstream names, and the dead
+  garnix host made every Nix call slow. On 2026-11-02 it had no
+  `aarch64-darwin` build of Emanote, so the first build on a Mac still
+  compiles Haskell from source (once, until the next `nix store gc`).
+  Apply with
+  `sudo launchctl kickstart -k system/systems.determinate.nix-daemon`
+  (the file is a symlink, so no re-link needed).
+
 ## 2026-11-02: git identity in `~/.gitconfig.local`
 
 ### Context
