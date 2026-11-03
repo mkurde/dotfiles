@@ -67,6 +67,15 @@ urllib3 still uses it, so `gcloud storage` crashed on import.
   OpenSSL bumps no longer change gcloud's runtime. The `3.12` symlink
   survives patch upgrades. Drop this once gcloud supports OpenSSL 4.
 
+### Ignore the `update-macos-python` warning
+
+- **Decision:** `report_issues` drops the warning `gcloud components
+  update` prints about `update-macos-python`.
+- **Why:** That step rebuilds the virtualenv on brew `python@3.14`
+  (still OpenSSL 4) on every update. `CLOUDSDK_PYTHON` bypasses that
+  virtualenv, so the warning is noise. Re-running the command only
+  recreates the unused virtualenv.
+
 ## 2026-10-22: Touch ID for sudo via `sudo_local`
 
 ### Context
