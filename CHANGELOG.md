@@ -5,6 +5,25 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-09: Drop the nixos.asia Nix cache
+
+### Context
+
+`cache.nixos.asia/oss` stopped answering (connection timeout on every
+request), so any Nix call that needed a missing path stalled 5 x 15 s
+per path. The always-on Emanote LaunchAgent in zettelkasten hung on
+startup.
+
+### Remove the extra substituter from `nix/nix.custom.conf`
+
+- **Decision:** No extra substituters; only `cache.nixos.org` remains.
+- **Why:** The cache had no `aarch64-darwin` Emanote build anyway, so on
+  a Mac it only added latency. Emanote compiles from source once and
+  stays in the local store. Do not re-add a cache for Emanote unless it
+  serves `aarch64-darwin`.
+  Apply with
+  `sudo launchctl kickstart -k system/systems.determinate.nix-daemon`.
+
 ## 2026-11-02: Nix cache for Emanote moves to nixos.asia
 
 ### Context

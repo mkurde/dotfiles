@@ -57,8 +57,8 @@ Switch to SSH afterwards:
 Repos with a `flake.nix` and `use flake` in `.envrc` need Nix.
 
 [Determinate Nix](https://docs.determinate.systems), installed by `just nix`.
-It also links `nix/nix.custom.conf` (trusted users, nixos.asia cache for prebuilt
-Emanote) to `/etc/nix/nix.custom.conf` and restarts the daemon.
+It also links `nix/nix.custom.conf` (trusted users) to
+`/etc/nix/nix.custom.conf` and restarts the daemon.
 
 The PATH entry is in `.zsh_path`, nix-direnv is loaded by
 `.config/direnv/direnvrc` (both linked by `just dotfiles`). Run `direnv allow`
