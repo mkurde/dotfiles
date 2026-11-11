@@ -140,4 +140,4 @@ private:
   inherit: 'default'
   backup:
     source:
-      - '~/documents-private'
+      - '~/private'
