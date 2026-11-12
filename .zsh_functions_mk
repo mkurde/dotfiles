@@ -5,6 +5,10 @@
 # Create a note in a zk notebook: _mk:zk:new <notebook-dir> <subdir> <group> <title...>
 # An empty group lets zk pick the group from the directory.
 function _mk:zk:new() {
+  if [[ -z "${1}" ]]; then
+    echo "zk: notebook directory not set (ZK_NOTEBOOK_DIR / ZK_WORK_NOTEBOOK_DIR)" >&2
+    return 1
+  fi
   local dir="${1}/${2}" group="${3}"
   shift 3
   if [[ ! -d "${dir}" ]]; then
@@ -22,12 +26,6 @@ function mk:zk:meeting:1on1() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "meet
 # Work notebook (ZK_WORK_NOTEBOOK_DIR, work laptop only)
 function mk:zk:work:note() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "" "" "$@"; }
 function mk:zk:work:meeting() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "meetings" "" "$@"; }
-
-# Create a new Zettelkasten journal for the current month
-function mk:zk:journal() {
-  echo "todo"
-  log::info "Creating a new Zettelkasten journal for the current month"
-}
 
 
 # ------------------------------------------------------------------------------ Kubernetes
