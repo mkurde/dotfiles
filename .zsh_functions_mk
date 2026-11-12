@@ -19,7 +19,7 @@ function _mk:zk:new() {
 }
 
 # Private notebook (ZK_NOTEBOOK_DIR)
-function mk:zk:note() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "" "" "$@"; }
+function mk:zk:note() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "inbox" "" "$@"; }
 function mk:zk:meeting() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "" "$@"; }
 function mk:zk:meeting:1on1() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "meetings-1on1" "$@"; }
 
