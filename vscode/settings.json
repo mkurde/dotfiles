@@ -444,5 +444,7 @@
     "https://json-schema.org/": true,
     "https://developer.microsoft.com/json-schemas/": true,
     "https://biomejs.dev": true
-  }
+  },
+  //"chat.disableAIFeatures": true,
+  "claudeCode.hideOnboarding": true
 }
