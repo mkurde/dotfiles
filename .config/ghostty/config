@@ -56,6 +56,10 @@ unfocused-split-fill = #000000
 window-inherit-font-size = false
 window-inherit-working-directory = false
 
+# initial size of new windows in cells; ~4:3 at font-size 12
+window-width = 120
+window-height = 42
+
 window-padding-balance = true
 window-padding-x = 5
 window-padding-y = 8
