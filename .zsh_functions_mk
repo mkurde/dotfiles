@@ -24,8 +24,8 @@ function mk:zk:meeting() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "" "$@"; }
 function mk:zk:meeting:1on1() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "meetings-1on1" "$@"; }
 
 # Work notebook (ZK_WORK_NOTEBOOK_DIR, work laptop only)
-function mk:zk:work:note() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "" "" "$@"; }
-function mk:zk:work:meeting() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "meetings" "" "$@"; }
+function mk:zk:work:note() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "docs" "" "$@"; }
+function mk:zk:work:meeting() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "docs/meeting" "" "$@"; }
 
 
 # ------------------------------------------------------------------------------ Kubernetes
