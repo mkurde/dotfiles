@@ -116,7 +116,7 @@ cask "mykso/tap/myks", trusted: true
 cask "ngrok"
 # cask "opensuperwhisper" # original dev (starmel/OpenSuperWhisper),
 #   fork my-monkeys/tap added more value
-cask "my-monkeys/tap/opensuperwhisper", trusted: true
+cask "my-monkeys/tap/openmonkeywhisper", trusted: true
 cask "opera-gx"
 cask "orbstack"
 cask "rectangle"
