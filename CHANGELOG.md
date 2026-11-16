@@ -5,6 +5,26 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-16: Private notes from Foam templates, not `zk new`
+
+### Context
+
+The zettelkasten repo moved note creation from zk to Foam templates in
+`.foam/templates/` (its ADR 0002) and keeps zk for queries only. Its zk
+config lost the templates, filenames and groups, so `mk:zk:note` created
+empty notes with random-ID names and `mk:zk:meeting:1on1` failed.
+
+### `mk:note`, `mk:meeting`, `mk:meeting:1on1` read the Foam templates
+
+- **Decision:** The private wrappers copy a Foam template, take the path
+  from `foam_template.filepath`, fill title and date, drop the
+  `foam_template` block and open the note in VS Code. The old
+  `mk:zk:*` names print the new name and fail.
+- **Why:** One template set serves VS Code, the shell and agents. Do not
+  point the wrappers back at `zk new`: that brings back a second template
+  set. The work notebook keeps `_mk:zk:new` and `mk:zk:work:*`; it has
+  its own zk config and is decided separately.
+
 ## 2026-11-09: Drop the nixos.asia Nix cache
 
 ### Context
