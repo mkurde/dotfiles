@@ -129,26 +129,41 @@ function mk:k8s:kubeconfig:init() {
   readonly KUBE_CONFIG_RANCHER="$HOME/.kube/rancher-config"
   local tmp_kubeconfig_path=""
   local configs_dir="$HOME/.kube/rancher.clusters"
-  rm -rf "$configs_dir"
-  mkdir -p "$configs_dir"
   log::info "Generating kubeconfig for Rancher clusters:"
 
   # Check if Rancher CLI is authenticated
   local rancher_output
   rancher_output=$(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}' 2>&1)
   local rancher_exit=$?
+  if [[ $rancher_exit -ne 0 && $rancher_output == *"run \`login\`"* ]]; then
+    log::warn "Rancher CLI not logged in, running rancher login"
+    local rancher_url="${RANCHER_URL:-}" rancher_token
+    [[ -z $rancher_url ]] && read -r "rancher_url?Rancher server URL: "
+    log::info "Log in, then Create API Key (no scope) at $rancher_url/dashboard/account"
+    open "$rancher_url/dashboard/account" 2>/dev/null
+    read -rs "rancher_token?Rancher API token (Bearer Token): "
+    echo
+    rancher login "$rancher_url" --token "$rancher_token" || return 1
+    rancher_output=$(rancher cluster ls --format 'rancher-{{.Name}} {{.ID}}' 2>&1)
+    rancher_exit=$?
+  fi
   if [ $rancher_exit -ne 0 ]; then
     log::error "Failed to list Rancher clusters (exit code: $rancher_exit)"
     log::error "Error output: $rancher_output"
     log::error "Please authenticate with Rancher CLI first: rancher login"
     return 1
   fi
+  rm -rf "$configs_dir"
+  mkdir -p "$configs_dir"
 
+  # Optional renames, e.g. in ~/.zsh_extra: typeset -gA RANCHER_CLUSTER_RENAMES=(prod my-prod)
   while read -r cluster_name cluster_id; do
+    local short_name="${cluster_name#rancher-}"
+    cluster_name="rancher-${RANCHER_CLUSTER_RENAMES[$short_name]:-$short_name}"
     local kubeconfig_file="$configs_dir/$cluster_name.yaml"
     log::info "  - $cluster_name ($cluster_id)"
     if rancher cluster kubeconfig "$cluster_id" \
-      | yq 'del(.current-context) | .contexts[0].name |= "rancher-" + .' >"$kubeconfig_file"; then
+      | yq 'del(.current-context) | .contexts[0].name = "'"$cluster_name"'"' >"$kubeconfig_file"; then
       tmp_kubeconfig_path="$kubeconfig_file:$tmp_kubeconfig_path"
     fi
   done < <(echo "$rancher_output")
