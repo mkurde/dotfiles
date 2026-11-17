@@ -33,6 +33,9 @@ export PATH="${PATH}:${HOMEBREW_PREFIX_ARM64}/opt/curl/bin"
 # Google Cloud SDK (prepend to prioritize gcloud tools like kubectl)
 export PATH="${HOMEBREW_PREFIX_ARM64}/share/google-cloud-sdk/bin:${PATH}"
 
+# Tailscale CLI bundled in the app (case-insensitive FS resolves `tailscale`)
+export PATH="${PATH}:/Applications/Tailscale.app/Contents/MacOS"
+
 # krew - kubectl plugin manager
 export PATH="${PATH}:${KREW_ROOT}/bin"
 
