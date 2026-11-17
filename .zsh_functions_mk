@@ -202,6 +202,13 @@ function mk:k8s:kubeconfig:init() {
   # Merge configs
   log::info "Merging kubeconfigs..."
   if KUBECONFIG="$tmp_kubeconfig_path" kubectl config view --flatten > "$KUBE_CONFIG_RANCHER"; then
+    # Drop generated contexts from the old config so removed/renamed clusters do not linger
+    [[ -f "$KUBE_CONFIG" ]] && yq -i '
+      del(.contexts[] | select(.name | test("^(rancher|tailscale)-")))
+      | (.contexts | map(.context.cluster)) as $c
+      | (.contexts | map(.context.user)) as $u
+      | del(.clusters[] | select(.name as $n | $c | any_c(. == $n) | not))
+      | del(.users[] | select(.name as $n | $u | any_c(. == $n) | not))' "$KUBE_CONFIG"
     if KUBECONFIG="$KUBE_CONFIG_RANCHER:$KUBE_CONFIG" kubectl config view --flatten > "$KUBE_CONFIG.new"; then
       mv -f "$KUBE_CONFIG.new" "$KUBE_CONFIG"
       chmod 600 "$KUBE_CONFIG"
