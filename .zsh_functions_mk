@@ -18,10 +18,70 @@ function _mk:zk:new() {
   zk new --working-dir "${dir}" ${group:+--group=${group}} --title="$*"
 }
 
-# Private notebook (ZK_NOTEBOOK_DIR)
-function mk:zk:note() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "inbox" "" "$@"; }
-function mk:zk:meeting() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "" "$@"; }
-function mk:zk:meeting:1on1() { _mk:zk:new "${ZK_NOTEBOOK_DIR}" "meetings" "meetings-1on1" "$@"; }
+# Create a note from a Foam template of the private zettelkasten:
+# _mk:note:new <template> <title...>
+# The template is .foam/templates/<template>.md in the repo above
+# ZK_NOTEBOOK_DIR. Its foam_template.filepath gives the path; title and date
+# are filled in, the foam_template block is dropped, the note opens in VS Code.
+function _mk:note:new() {
+  if [[ -z "${ZK_NOTEBOOK_DIR}" ]]; then
+    echo "note: ZK_NOTEBOOK_DIR not set" >&2
+    return 1
+  fi
+  local repo="${ZK_NOTEBOOK_DIR%/content}"
+  local tpl="${repo}/.foam/templates/${1}.md"
+  shift
+  local title="$*"
+  if [[ ! -f "${tpl}" ]]; then
+    echo "note: template not found: ${tpl}" >&2
+    return 1
+  fi
+  if [[ -z "${title}" ]]; then
+    echo "note: title missing" >&2
+    return 1
+  fi
+
+  local filepath body
+  filepath=$(awk -F': ' '/^  filepath: / {print $2; exit}' "${tpl}")
+  filepath="${filepath//\'/}"
+  body=$(awk '/^foam_template:/ {skip = 1; next} skip && /^  / {next} {skip = 0; print}' "${tpl}")
+
+  filepath=$(_mk:note:fill "${filepath}" "${title}")
+  body=$(_mk:note:fill "${body}" "${title}")
+
+  local note="${repo}${filepath}"
+  if [[ -e "${note}" ]]; then
+    echo "note: already exists: ${note}" >&2
+    return 1
+  fi
+  mkdir -p "$(dirname "${note}")"
+  printf '%s\n' "${body}" > "${note}"
+  echo "${note}"
+  code "${note}"
+}
+
+# Fill the Foam variables the templates use: _mk:note:fill <text> <title>
+# Quoted patterns and replacements are literal in bash and zsh, so a title
+# with & or / stays as typed.
+function _mk:note:fill() {
+  local s="${1}"
+  s="${s//'$FOAM_TITLE'/"${2}"}"
+  s="${s//'$FOAM_DATE_YEAR'/"$(date +%Y)"}"
+  s="${s//'$FOAM_DATE_MONTH'/"$(date +%m)"}"
+  s="${s//'$FOAM_DATE_DATE'/"$(date +%d)"}"
+  s="${s//'$FOAM_SELECTED_TEXT'/}"
+  printf '%s' "${s}"
+}
+
+# Private notebook: Foam templates (zettelkasten docs/adr/0002-*)
+function mk:note() { _mk:note:new new-note "$@"; }
+function mk:meeting() { _mk:note:new meeting "$@"; }
+function mk:meeting:1on1() { _mk:note:new meeting-1on1 "$@"; }
+
+# Old names: fail with a hint instead of letting zk create an empty note.
+function mk:zk:note() { echo "mk:zk:note is gone, use mk:note" >&2; return 1; }
+function mk:zk:meeting() { echo "mk:zk:meeting is gone, use mk:meeting" >&2; return 1; }
+function mk:zk:meeting:1on1() { echo "mk:zk:meeting:1on1 is gone, use mk:meeting:1on1" >&2; return 1; }
 
 # Work notebook (ZK_WORK_NOTEBOOK_DIR, work laptop only)
 function mk:zk:work:note() { _mk:zk:new "${ZK_WORK_NOTEBOOK_DIR}" "docs" "" "$@"; }
