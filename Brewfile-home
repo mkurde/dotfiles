@@ -1,0 +1,2 @@
+# Home Mac only: `just homebrew-home`. Not part of `just all`.
+cask "keka"

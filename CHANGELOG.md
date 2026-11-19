@@ -5,6 +5,22 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-19: Home-only apps in `Brewfile-home`
+
+### Context
+
+This public repo sets up both the home and the work Mac. Some apps
+belong on the home Mac only.
+
+### Separate Brewfile with an opt-in recipe
+
+- **Decision:** Home-only apps go in `Brewfile-home`, installed by
+  `just homebrew-home`, which `all` does not run.
+- **Why:** Same pattern as `Brewfile-fonts`. No hostname detection, so
+  no machine names in a public repo and nothing breaks on a new Mac.
+  `homebrew-dep.sh` runs `brew bundle` without `--cleanup`, so the
+  main Brewfile never removes these apps.
+
 ## 2026-11-16: Private notes from Foam templates, not `zk new`
 
 ### Context

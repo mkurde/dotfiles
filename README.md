@@ -43,6 +43,7 @@ Setup steps (order):
 - `just bin`
 - `just nix`, see [Nix](#nix)
 - optional: `just homebrew-fonts`
+- home Mac only: `just homebrew-home` (`Brewfile-home`)
 - optional: `just vscode-ext`
 - optional: `just kubectl-setup`
 
