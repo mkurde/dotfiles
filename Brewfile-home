@@ -1,2 +1,7 @@
 # Home Mac only: `just homebrew-home`. Not part of `just all`.
 cask "keka"
+cask "lm-studio"
+# LLM wiki link tooling (ai repo, ADR 0003 trial)
+tap "iwe-org/iwe"
+brew "iwe-org/iwe/iwe"
+brew "lychee"
