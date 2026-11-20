@@ -24,6 +24,20 @@ Some tools are only used on the work Mac, but sat in the shared
   installed, so it needs no change. Only generic tools go here;
   employer config stays in the private work repo.
 
+## 2026-11-20: Ghostty background `#212121`, opaque
+
+### Context
+
+The background went from `#1A1A1A` to `#000000` at 0.90 opacity to
+match iTerm. On black, Claude Code's bold, dim and highlight styles lost
+contrast, and the see-through window made it worse.
+
+### Neutral dark gray, no transparency
+
+- **Decision:** `background = #212121`, `background-opacity = 1.0`.
+- **Why:** That is the gray of the VS Code terminal, which TUIs like
+  Claude Code are tuned against. Do not switch back to black for looks.
+
 ## 2026-11-19: Home-only apps in `Brewfile-home`
 
 ### Context
