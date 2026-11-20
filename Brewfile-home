@@ -3,5 +3,7 @@ cask "keka"
 cask "lm-studio"
 # LLM wiki link tooling (ai repo, ADR 0003 trial)
 tap "iwe-org/iwe"
+# Pinned (`brew pin iwe`): third-party tap, pre-1.0 with breaking CLI changes. Upgrade on purpose:
+# `brew unpin iwe && brew upgrade iwe && brew pin iwe`. Brewfiles cannot pin; re-run on a new Mac.
 brew "iwe-org/iwe/iwe"
 brew "lychee"
