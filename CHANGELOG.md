@@ -5,6 +5,20 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-20: Ghostty background `#212121`, opaque
+
+### Context
+
+The background went from `#1A1A1A` to `#000000` at 0.90 opacity to
+match iTerm. On black, Claude Code's bold, dim and highlight styles lost
+contrast, and the see-through window made it worse.
+
+### Neutral dark gray, no transparency
+
+- **Decision:** `background = #212121`, `background-opacity = 1.0`.
+- **Why:** That is the gray of the VS Code terminal, which TUIs like
+  Claude Code are tuned against. Do not switch back to black for looks.
+
 ## 2026-11-19: Home-only apps in `Brewfile-home`
 
 ### Context

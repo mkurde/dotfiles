@@ -1,6 +1,6 @@
-background = #000000
+background = #212121
 background-blur = 20
-background-opacity = 0.90
+background-opacity = 1.0
 background-opacity-cells = true
 
 copy-on-select = clipboard
