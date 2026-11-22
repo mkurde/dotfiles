@@ -7,3 +7,7 @@ tap "iwe-org/iwe"
 # `brew unpin iwe && brew upgrade iwe && brew pin iwe`. Brewfiles cannot pin; re-run on a new Mac.
 brew "iwe-org/iwe/iwe"
 brew "lychee"
+# Evernote backup DB + offline ENEX export (evernote-archive repo)
+brew "evernote-backup"
+# Note app trial: Evernote replacement candidate (evernote-archive repo)
+cask "joplin"
