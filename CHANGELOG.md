@@ -5,6 +5,25 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-22: Work-only apps in `Brewfile-work`
+
+### Context
+
+Some tools are only used on the work Mac, but sat in the shared
+`Brewfile`, so the home Mac installed them (gcloud also ran
+`gcloud components update` in daily updates there).
+
+### Mirror `Brewfile-home`
+
+- **Decision:** Work-only tools (gcloud and its `python@3.14` base,
+  argocd, k9s, pinentry-mac, rancher-cli, myks, Wireshark) move to
+  `Brewfile-work`, installed by `just homebrew-work`, not run by `all`.
+  Unused lazydocker, lazygit and doctl are dropped.
+- **Why:** Same opt-in pattern as `Brewfile-home`, no hostname
+  detection. `.zsh_daily_updates` already skips gcloud when it is not
+  installed, so it needs no change. Only generic tools go here;
+  employer config stays in the private work repo.
+
 ## 2026-11-19: Home-only apps in `Brewfile-home`
 
 ### Context

@@ -142,6 +142,11 @@ homebrew-fonts: homebrew
 homebrew-home: homebrew
 	brew bundle install --no-upgrade --file "{{ justfile_directory() }}/Brewfile-home"
 
+# install work-only apps (work Mac only, not in `all`)
+[script]
+homebrew-work: homebrew
+	brew bundle install --no-upgrade --file "{{ justfile_directory() }}/Brewfile-work"
+
 # install VS Code and Cursor extensions
 vscode-ext:
 	"{{ justfile_directory() }}/vscode/install-vscode-extensions" "{{ justfile_directory() }}/vscode/extensions.txt" code

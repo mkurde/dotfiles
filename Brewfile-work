@@ -1,0 +1,13 @@
+# Work Mac only: `just homebrew-work`. Not part of `just all`.
+tap "mykso/tap"
+
+brew "argocd"
+brew "k9s"
+brew "pinentry-mac"
+# python@3.14: gcloud virtenv base; listed so `brew autoremove` keeps it
+brew "python@3.14"
+brew "rancher-cli"
+
+cask "gcloud-cli"
+cask "mykso/tap/myks", trusted: true
+cask "wireshark-app"

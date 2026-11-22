@@ -3,13 +3,11 @@
 tap "can1357/tap"
 tap "nklmilojevic/sofka"
 tap "my-monkeys/tap"
-tap "mykso/tap"
 tap "nats-io/nats-tools"
 tap "redpanda-data/tap"
 tap "stablyai/orca"
 
 brew "age"
-brew "argocd"
 brew "bash"
 brew "bat"
 brew "biome"
@@ -19,7 +17,6 @@ brew "crane"
 brew "curl"
 brew "diff-so-fancy"
 brew "direnv"
-brew "doctl"
 brew "duti"
 # brew "emacs" # not used
 brew "eza"
@@ -41,7 +38,6 @@ brew "htop"
 brew "iperf3"
 brew "istioctl"
 brew "k3d"
-brew "k9s"
 brew "kapp"
 brew "kbld"
 brew "kdash"
@@ -49,8 +45,6 @@ brew "kubectx"
 brew "kubefwd"
 brew "kubernetes-cli", link: false
 brew "kubie"
-brew "lazydocker"
-brew "lazygit"
 brew "make"
 brew "mas"
 brew "mise"
@@ -59,12 +53,8 @@ brew "nats-io/nats-tools/nats", trusted: true
 brew "ngrep"
 brew "nushell"
 brew "can1357/tap/omp", trusted: true
-brew "pinentry-mac"
 brew "popeye"
 brew "prips"
-# gcloud virtenv base; listed so `brew autoremove` keeps it
-brew "python@3.14"
-brew "rancher-cli"
 brew "redpanda-data/tap/redpanda", trusted: true
 brew "restic"
 brew "resticprofile"
@@ -102,17 +92,14 @@ cask "cursor-cli"
 cask "dash"
 cask "firefox"
 cask "firefox@developer-edition"
-cask "gcloud-cli"
 cask "ghostty"
 # cask "google-chrome" # installed by company tooling, not via Homebrew
 # cask "gimp"
 cask "istat-menus"
 cask "iterm2"
-# cask "joplin"
 cask "lens"
 # cask "logitech-camera-settings" # replaced with cameracontroller
 # cask "logitech-options" # not needed, MX Vertical works without a driver
-cask "mykso/tap/myks", trusted: true
 cask "ngrok"
 # cask "opensuperwhisper" # original dev (starmel/OpenSuperWhisper),
 #   fork my-monkeys/tap added more value
@@ -132,8 +119,7 @@ cask "the-unarchiver"
 cask "ticktick"
 cask "visual-studio-code"
 # cask "vlc"
-cask "wireshark-app"
 
-# Installed by company tooling, not via Homebrew: obsidian, slack
+# Installed by company tooling, not via Homebrew: obsidian, slack, teamviewer, tailscale
 
 # mas "Kaleidoscope", id: 587512244
