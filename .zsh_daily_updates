@@ -106,7 +106,12 @@ mk:daily-update:run_slow() {
 
     # Initialize log file
     echo "=== Slow updates started at $(date) ===" | tee -a "${log_file}"
-    echo "Running slow updates (${SLOW_UPDATE_TOOLS[*]})..." | tee -a "${log_file}"
+    # Label only the tools installed here (e.g. gcloud is work-only)
+    local tool available=()
+    for tool in "${SLOW_UPDATE_TOOLS[@]}"; do
+        command -v "${tool}" &>/dev/null && available+=("${tool}")
+    done
+    echo "Running slow updates (${available[*]})..." | tee -a "${log_file}"
     echo "----------------------------------------" | tee -a "${log_file}"
 
     # Homebrew updates. Each step runs independently: a failing `brew update`
