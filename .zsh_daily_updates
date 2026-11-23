@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-# Daily tooling update system
-# Runs once per day on first shell open to keep important CLI tools up-to-date
+# Scheduled tooling update system
+# Runs on the first shell opened on or after each UPDATE_WEEKDAYS day
 
-# Tools updated each day; mise covers its global config (.config/mise/config.toml)
+# Weekdays to update on (date +%u: 1=Mon ... 7=Sun). A missed day (no shell
+# opened) catches up on the next shell, once.
+UPDATE_WEEKDAYS=(1 4)
+
+# Tools updated on each run; mise covers its global config (.config/mise/config.toml)
 SLOW_UPDATE_TOOLS=(brew gcloud mise)
 
 # Casks to skip during `brew upgrade --cask` (they self-update and would fail
@@ -20,7 +24,20 @@ mkdir -p "${DAILY_UPDATE_LOCK_DIR}"
 # Get current date (YYYY-MM-DD format)
 current_date=$(date '+%Y-%m-%d')
 
-# Check if we should run updates today
+# Most recent scheduled day on or before today; the run that covers it
+# claims it, so shells until the next scheduled day skip.
+mk:daily-update:due_date() {
+    local today wd diff min=7
+    today=$(date '+%u')
+    for wd in "${UPDATE_WEEKDAYS[@]}"; do
+        diff=$(( (today - wd + 7) % 7 ))
+        (( diff < min )) && min=${diff}
+    done
+    date -v-"${min}"d '+%Y-%m-%d'
+}
+due_date=$(mk:daily-update:due_date)
+
+# Check if a run is due (last run before the latest scheduled day)
 mk:daily-update:should_run() {
     # If lock file doesn't exist, we should run
     if [[ ! -f "${DAILY_UPDATE_LOCK_FILE}" ]]; then
@@ -31,22 +48,22 @@ mk:daily-update:should_run() {
     local last_update_date
     last_update_date=$(cat "${DAILY_UPDATE_LOCK_FILE}" 2>/dev/null || echo "")
 
-    # If dates differ, we should run
-    if [[ "${current_date}" != "${last_update_date}" ]]; then
+    # Last run predates the latest scheduled day (ISO dates sort as strings)
+    if [[ "${last_update_date}" < "${due_date}" ]]; then
         return 0
     fi
 
-    # Already updated today
+    # Already updated since the latest scheduled day
     return 1
 }
 
-# Atomically claim today's run. Shells opened in the same second (iTerm
+# Atomically claim the due run. Shells opened in the same second (iTerm
 # restoring tabs after login) all pass should_run before any writes the date
 # file; mkdir succeeds for exactly one of them.
 mk:daily-update:claim_today() {
-    mkdir "${DAILY_UPDATE_LOCK_DIR}/run-${current_date}" 2>/dev/null || return 1
+    mkdir "${DAILY_UPDATE_LOCK_DIR}/run-${due_date}" 2>/dev/null || return 1
     find "${DAILY_UPDATE_LOCK_DIR}" -maxdepth 1 -type d -name 'run-*' \
-        ! -name "run-${current_date}" -exec rmdir {} + 2>/dev/null
+        ! -name "run-${due_date}" -exec rmdir {} + 2>/dev/null
     echo "${current_date}" > "${DAILY_UPDATE_LOCK_FILE}"
 }
 
@@ -259,7 +276,7 @@ mk:daily-update:show_log() {
 # Helper function to force run updates (for testing)
 mk:daily-update:force() {
     rm -f "${DAILY_UPDATE_LOCK_FILE}"
-    rmdir "${DAILY_UPDATE_LOCK_DIR}/run-${current_date}" 2>/dev/null
+    rmdir "${DAILY_UPDATE_LOCK_DIR}/run-${due_date}" 2>/dev/null
     mk:daily-update:run
 }
 
@@ -281,5 +298,5 @@ alias daily-updates-log='mk:daily-update:show_log'
 alias daily-updates-stream='mk:daily-update:stream_log'
 alias daily-updates-status='echo "Last update: $(cat "${DAILY_UPDATE_LOCK_FILE}" 2>/dev/null || echo "never")"'
 
-# Auto-run daily updates
+# Auto-run scheduled updates
 mk:daily-update:run

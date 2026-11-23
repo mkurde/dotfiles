@@ -5,6 +5,20 @@ Short ADRs for non-obvious dotfile changes. Newest first.
 Each entry answers: what was going on, what we chose, and why that
 choice exists so a future me does not "fix" it back.
 
+## 2026-11-23: updates run Monday and Thursday, not daily
+
+### Context
+
+Daily brew/mise/gcloud runs on the first shell were annoying.
+
+- **Decision:** `UPDATE_WEEKDAYS=(1 4)` in `.zsh_daily_updates`. The
+  first shell on or after the latest scheduled day runs once and claims
+  `run-<scheduled date>`.
+- **Why:** Catch-up instead of "only on that weekday": a Monday without
+  a shell still updates on Tuesday. The `mkdir` claim stays atomic; the
+  key is the scheduled date instead of today. File and alias names keep
+  `daily` to avoid churn.
+
 ## 2026-11-22: Work-only apps in `Brewfile-work`
 
 ### Context
