@@ -73,6 +73,7 @@ config:
       - '~/.docker'
       - '~/.factory'
       - '~/.gemini'
+      - '~/.gitconfig.local'
       - '~/.gnupg'
       - '~/.grok'
       - '~/.hermes'
